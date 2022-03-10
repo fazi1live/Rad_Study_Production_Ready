@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(express.raw());
 app.use(cors());
-const Port = process.env.Port || 3636;
+const PORT = process.env.PORT || 3636;
 //Block End Intialize the app
 
 
@@ -79,7 +79,7 @@ app.use((error, req, res, next) => {
 
 //Start Block For Listening Your App On Defined Port
 app.listen(Port, () => {
-    console.log(`Server is Listening/Running on Port ${Port}`);
+    console.log(`Server is Listening/Running on Port ${PORT}`);
     // fs.readFile('./file',"utf8",(error,data) => {
     //     console.log(error);
     //     console.log(data);
