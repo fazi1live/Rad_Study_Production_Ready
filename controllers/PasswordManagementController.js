@@ -108,13 +108,15 @@ const ResetPassword = async (req, res) => {
                 Result:null
             })
         }
-        let _UpdatedPassword = NewPassword;
-        bcrypt.hash(_UpdatedPassword,SaltRounds,(err,hash)=>{
-            _UpdatedPassword=hash;
-        });
+        // let _UpdatedPassword = NewPassword;
+        // bcrypt.hash(_UpdatedPassword,SaltRounds,(err,hash)=>{
+        //     _UpdatedPassword=hash;
+        // });
+        let pass = await bcrypt.hash(NewPassword,SaltRounds);
+        // const _UpdatedPassword = bcrypt.hash(NewPassword,SaltRounds);
         const _UpdatedPasswrod = await _UserManagementModel.updateOne(
             {_id:_GetVerifiedUser._id},
-            { $set: {Password:_UpdatedPassword, RealPassword:NewPassword} }
+            { $set: {Password:pass, RealPassword:NewPassword} }
         )
         res.json({
             Message:'Password Has Updated Successfuly',
