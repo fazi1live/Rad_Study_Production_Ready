@@ -12,3 +12,5 @@ mongoose.connect(process.env.DATABASE_URI, { useNewUrlParser: true, useUnifiedTo
     }
     else { console.log('Error: Not Connected to the MongoDb' + error) }
 });
+
+// mongodb+srv://lms1:lms1@clusterlms.1xyuk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority

@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.text());
 app.use(express.raw());
 app.use(cors());
-const PORT = process.env.PORT || 3636;
+const PORT = process.env.Port || 3636;
 //Block End Intialize the app
 
 
