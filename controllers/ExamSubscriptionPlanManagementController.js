@@ -4,7 +4,9 @@ const CreateExamSubscriptionPlan = async (req, res) => {
     try {
         const {ExamPlan,Price} = req.body;
         const _FindTotalExams =  await _ExamSubscriptionPlanModel.find();
-
+        const _FindAlreadyExistExamPlan = await _ExamSubscriptionPlanModel.findOne(
+            {ExamPlan:ExamPlan}
+        )
         if(_FindTotalExams.length >=5 ){
             return res.json({
                 Message:'You can Only Add 5 Exams Plan',
@@ -12,6 +14,15 @@ const CreateExamSubscriptionPlan = async (req, res) => {
                 Result:null
             })
         }
+        if(_FindAlreadyExistExamPlan !== null){
+            return res.json({
+                Message:`Warning ! Plan already exist with this ${ExamPlan}`,
+                Data:true,
+                Result:true,
+                Status:1 
+            })
+        }
+
         const _CreateSubscription = new _ExamSubscriptionPlanModel({
             ExamPlan:ExamPlan,
             Price:Price
