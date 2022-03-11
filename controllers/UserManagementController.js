@@ -74,7 +74,6 @@ const UserRegister = async(req, res) => {
                 Name:Name,
                 Email:Email,
                 Password:Password,
-                RealPassword:Password,
                 CourseName:CourseToSave            
             });
             await _RegisterAdmin.save();

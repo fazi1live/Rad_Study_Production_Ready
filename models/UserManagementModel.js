@@ -16,7 +16,6 @@ const UserRegisterSchema = mongoose.Schema({
         type: [{
             CName:{ type:String },
         }], required: true},
-    RealPassword:{type:String},
     SaltString:{type:String},
     Status:{type:Number, default:0},
     CreatedDate: {
