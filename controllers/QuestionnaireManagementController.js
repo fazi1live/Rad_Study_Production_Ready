@@ -1,5 +1,6 @@
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
 const _DummyExamModel = require('../models/DummyExamModel');
+const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionManagementModel');
 
 
 
@@ -7,32 +8,32 @@ const DummyExam = async (req, res) => {
     try {
         const { ExamPlan, Price, TotalQuestions, Remarks } = req.body;
         const FindExamIfAlreadyExists = await _DummyExamModel.findOne(
-            { ExamPlan:ExamPlan }
+            { ExamPlan: ExamPlan }
         )
         if (FindExamIfAlreadyExists !== null) {
             const _UpdateExamPlanQuestions = await _DummyExamModel.updateOne(
-                { ExamPlan:ExamPlan },
-                { $inc: {TotalQuestions:TotalQuestions} }
+                { ExamPlan: ExamPlan },
+                { $inc: { TotalQuestions: TotalQuestions } }
             )
             res.json({
-                Message:`New Questions Added To Existing Plan ${ExamPlan}`,
-                Data:true,
-                Result:true,
-                Status:1
+                Message: `New Questions Added To Existing Plan ${ExamPlan}`,
+                Data: true,
+                Result: true,
+                Status: 1
             })
         } else {
             const DummyToSave = new _DummyExamModel({
-                ExamPlan:ExamPlan,
-                Price:Price,
-                TotalQuestions:TotalQuestions,
-                Remarks:Remarks
+                ExamPlan: ExamPlan,
+                Price: Price,
+                TotalQuestions: TotalQuestions,
+                Remarks: Remarks
             })
             const SavedData = await DummyToSave.save();
             res.json({
-                Message:'Question has Added to Exam Plan Successfuly',
-                Data:true,
-                Result:true,
-                Status:2
+                Message: 'Question has Added to Exam Plan Successfuly',
+                Data: true,
+                Result: true,
+                Status: 2
             })
         }
     } catch (error) {
@@ -48,9 +49,9 @@ const GetDummyExam = async (req, res) => {
     try {
         const GetAllDummyExams = await _DummyExamModel.find().lean();
         res.json({
-            Message:'Found Successfuly',
-            Data:true,
-            Result:GetAllDummyExams
+            Message: 'Found Successfuly',
+            Data: true,
+            Result: GetAllDummyExams
         })
     } catch (error) {
         res.json({
@@ -66,12 +67,54 @@ const DeleteById = async (req, res) => {
 
         const _ExamId = req.params._ExamId;
         const DocumentToDelete = await _DummyExamModel.remove(
-            {_id:_ExamId}
+            { _id: _ExamId }
         )
         res.json({
-            Message:'Exam Deleted Successfuly',
-            Data:true,
-            Result:DocumentToDelete
+            Message: 'Exam Deleted Successfuly',
+            Data: true,
+            Result: DocumentToDelete
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+const EditDummyExamById = async (req, res) => {
+    try {
+        const _ExamId = req.params._ExamId;
+        const TotalQuestions = req.body;
+        const UpdateExamQuestions = await _DummyExamModel.updateOne(
+            { _id: _ExamId },
+            { $set: { TotalQuestions: TotalQuestions } }
+        );
+        res.json({
+            Message: `Questions has Updated in ExamPlan`,
+            Data: true,
+            Result: UpdateExamQuestions
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+const GetEditDummyExamById = async (req, res) => {
+    try {
+        const _ExamId = req.params._ExamId;
+        const GetExam = await _DummyExamModel.findOne(
+            { _id: _ExamId }
+        )
+        res.json({
+            Message: 'Found',
+            Data: true,
+            Result: GetExam
         })
     } catch (error) {
         res.json({
@@ -95,7 +138,7 @@ const CreateQuestionnaire = async (req, res) => {
                 Message: `Questions Has Added Successfuly To Already Exists Exam Plan ${ExamPlan}`,
                 Data: true,
                 Result: _AddMoreQuestionsToExam,
-                Status:1
+                Status: 1
             })
         } else {
             const _CreateExam = new _QuestionnaireCluster({
@@ -108,7 +151,7 @@ const CreateQuestionnaire = async (req, res) => {
                 Message: `ExamPlan and Question Added Successfuly`,
                 Data: true,
                 Result: _AddExam,
-                Status:2
+                Status: 2
             })
         }
     } catch (error) {
@@ -124,15 +167,15 @@ const GetAllQuestionnaires = async (req, res) => {
     try {
         const _GetAllQuestionnaires = await _QuestionnaireCluster.find().lean();
         res.json({
-            Message:'All Exams Found Successfuly',
-            Data:true,
-            Result:_GetAllQuestionnaires
+            Message: 'All Exams Found Successfuly',
+            Data: true,
+            Result: _GetAllQuestionnaires
         })
     } catch (error) {
         res.json({
-            Message:error.message,
-            Data:false,
-            Result:null
+            Message: error.message,
+            Data: false,
+            Result: null
         })
     }
 }
@@ -141,36 +184,50 @@ const GetQuestionnaireById = async (req, res) => {
     try {
         const _QuestionnaireId = req.params._QuestionnaireId;
         const _GetQuestionnaireById = await _QuestionnaireCluster.findOne(
-            {_id:_QuestionnaireId}
+            { _id: _QuestionnaireId }
         ).lean();
         res.json({
-            Message:'Questionnaire Found Successfully',
-            Data:true,
-            Result:_GetQuestionnaireById
+            Message: 'Questionnaire Found Successfully',
+            Data: true,
+            Result: _GetQuestionnaireById
         })
     } catch (error) {
         res.json({
-            Message:error.message,
-            Data:false,
-            Result:null
+            Message: error.message,
+            Data: false,
+            Result: null
         })
     }
 }
 
-const DeleteFullQuestionnaire = async(req, res) =>{
+const DeleteFullQuestionnaire = async (req, res) => {
     try {
-        const _GetIdFromParams = req.params.ExamId;
-        const _DeleteExam = await _QuestionnaireCluster.remove({_id:_GetIdFromParams});
-        res.json({
-            Message:'Exam Has Deleted Successfuly',
-            Data:true,
-            Result:_DeleteExam
-        })
+        const Id = req.params._ExamId;
+        const ExamPlan = req.body;
+        const GetQuestionnaire = await _DummyExamModel.findOne(
+            { ExamPlan: ExamPlan }
+        )
+        if (GetQuestionnaire !== null) {
+            res.json({
+                Message: 'Warning! You cannot delete the ExamPlan because It already have Questions in it. SO pelese the Questions then You can Delete it',
+                Data: true,
+                Result: true,
+                Status: 1
+            })
+        } else {
+            const _DeleteExam = await _ExamSubscriptionManagementModel.remove({ _id: Id });
+            res.json({
+                Message: 'Exam Has Deleted Successfuly',
+                Data: true,
+                Result: _DeleteExam,
+                Status:2
+            })
+        }
     } catch (error) {
         res.json({
-            Message:error.message,
-            Data:false,
-            Result:null
+            Message: error.message,
+            Data: false,
+            Result: null
         })
     }
 }
@@ -203,12 +260,14 @@ const DeleteFullQuestionnaire = async(req, res) =>{
 // }
 
 
-module.exports = { 
-    CreateQuestionnaire, 
-    GetAllQuestionnaires, 
-    DeleteFullQuestionnaire, 
-    GetQuestionnaireById, 
-    DummyExam, 
+module.exports = {
+    CreateQuestionnaire,
+    GetAllQuestionnaires,
+    DeleteFullQuestionnaire,
+    GetQuestionnaireById,
+    DummyExam,
     GetDummyExam,
-    DeleteById
- }
+    DeleteById,
+    EditDummyExamById,
+    GetEditDummyExamById
+}
