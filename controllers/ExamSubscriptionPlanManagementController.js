@@ -31,7 +31,8 @@ const CreateExamSubscriptionPlan = async (req, res) => {
          res.json({
              Message:'ExamSubscitpionPlan has Created Successfuly',
              Data:true,
-             Result:_SaveDataTODatabase
+             Result:_SaveDataTODatabase,
+             Status:2
          })
     } catch (error) {
         res.json({
