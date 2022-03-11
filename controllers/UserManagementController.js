@@ -89,5 +89,112 @@ const UserRegister = async(req, res) => {
     }
 }
 
+const GetAllUser = async (req, res) => {
+    try {
+        const _GetAllUser = await _UserManagementModel.find().lean();
+        res.json({
+            Message:'Found Successfuly',
+            Data:true,
+            Result:_GetAllUser
+        })
+    } catch (error) {
+        res.json({
+            Error: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
 
-module.exports= { UserLogin, UserRegister }
+DeleteUserById = async (req, res) => {
+    try {
+        const _UserId = req.params._UserId;
+        const _UserToDelete = await _UserManagementModel.remove(
+            {_id:_UserId}
+            )
+            res.json({
+                Message:'User has Removed Successfuly',
+                Data:true,
+                Result:_UserToDelete
+            })
+    } catch (error) {
+        res.json({
+            Error: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+ActiveUserStatusById = async (req, res) => {
+    try {
+        const _UserId = req.params._UserId;
+        const _UserStatusToUpdate = await _UserManagementModel.updateOne(
+            {_id:_UserId},
+            {$set:{Status:1}}
+        )
+        res.json({
+            Message:"User Activated",
+            Data:true,
+            Result:_UserStatusToUpdate
+        })
+    } catch (error) {
+        res.json({
+            Error: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+DeactivateUserStatusById = async (req, res) => {
+    try {
+        const _UserId = req.params._UserId;
+        console.log(_UserId);
+        const _UserStatusToUpdate = await _UserManagementModel.updateOne(
+            {_id:_UserId},
+            {$set:{Status:0}}
+        )
+        res.json({
+            Message:"User Deactivated",
+            Data:true,
+            Result:_UserStatusToUpdate
+        })
+    } catch (error) {
+        res.json({
+            Error: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+GetUserInformationById = async (req, res) => {
+    try {
+        const _UserId = req.params._UserId;
+        const _GetUserInformationById = await _UserManagementModel.findOne(
+            {_id:_UserId}
+        )
+        res.json({
+            Message:'User Found',
+            Data:true,
+            Result:_GetUserInformationById
+        })
+    } catch (error) {
+        res.json({
+            Error: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+module.exports= { 
+    UserLogin, 
+    UserRegister, 
+    GetAllUser,
+    DeleteUserById,
+    ActiveUserStatusById,
+    DeactivateUserStatusById,
+    GetUserInformationById
+ }

@@ -7,7 +7,12 @@ const Router = express.Router();
 //Start Block Accessing The Library Files And Routes
 const { 
     UserLogin,
-    UserRegister
+    UserRegister,
+    GetAllUser,
+    DeleteUserById,
+    ActiveUserStatusById,
+    DeactivateUserStatusById,
+    GetUserInformationById
 } = require('../controllers/UserManagementController')
 //End Block Accessing The Library Files And Routes
 
@@ -15,6 +20,11 @@ const {
 //Start Block For Accessing The Controlers
 Router.post('/UserLogin',UserLogin);
 Router.post('/UserRegister',UserRegister);
+Router.get('/GetAllUser',GetAllUser);
+Router.delete('/DeleteUserById/:_UserId',DeleteUserById);
+Router.post('/ActiveUserStatusById/:_UserId',ActiveUserStatusById);
+Router.post('/DeactivateUserStatusById/:_UserId',DeactivateUserStatusById);
+Router.get('/GetUserInformationById/:_UserId',GetUserInformationById);
 //End Block For Accessing The Controlers
 
 

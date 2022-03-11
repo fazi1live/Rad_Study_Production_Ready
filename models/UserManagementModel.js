@@ -23,7 +23,7 @@ const UserRegisterSchema = mongoose.Schema({
         type: String,
         default: `${year}-${month}-${day}`,
     }
-})
+},{ timestamps: true })
 
 UserRegisterSchema.pre('save', function(next){
     bcrypt.genSalt(SaltRounds,(error,salt)=>{
