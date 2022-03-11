@@ -6,17 +6,72 @@ const _DummyExamModel = require('../models/DummyExamModel');
 const DummyExam = async (req, res) => {
     try {
         const { ExamPlan, Price, TotalQuestions, Remarks } = req.body;
-        const DummyToSave = new _DummyExamModel({
-            ExamPlan:ExamPlan,
-            Price:Price,
-            TotalQuestions:TotalQuestions,
-            Remarks:Remarks
-        })
-        const SavedData = await DummyToSave.save();
+        const FindExamIfAlreadyExists = await _DummyExamModel.findOne(
+            { ExamPlan:ExamPlan }
+        )
+        if (FindExamIfAlreadyExists !== null) {
+            const _UpdateExamPlanQuestions = await _DummyExamModel.updateOne(
+                { ExamPlan:ExamPlan },
+                { $inc: {TotalQuestions:TotalQuestions} }
+            )
+            res.json({
+                Message:`New Questions Added To Existing Plan ${ExamPlan}`,
+                Data:true,
+                Result:true,
+                Status:1
+            })
+        } else {
+            const DummyToSave = new _DummyExamModel({
+                ExamPlan:ExamPlan,
+                Price:Price,
+                TotalQuestions:TotalQuestions,
+                Remarks:Remarks
+            })
+            const SavedData = await DummyToSave.save();
+            res.json({
+                Message:'Question has Added to Exam Plan Successfuly',
+                Data:true,
+                Result:true,
+                Status:2
+            })
+        }
+    } catch (error) {
         res.json({
-            Message:'Question has Added to Exam Plan Successfuly',
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+const GetDummyExam = async (req, res) => {
+    try {
+        const GetAllDummyExams = await _DummyExamModel.find().lean();
+        res.json({
+            Message:'Found Successfuly',
             Data:true,
-            Result:true
+            Result:GetAllDummyExams
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+const DeleteById = async (req, res) => {
+    try {
+
+        const _ExamId = req.params._ExamId;
+        const DocumentToDelete = await _DummyExamModel.remove(
+            {_id:_ExamId}
+        )
+        res.json({
+            Message:'Exam Deleted Successfuly',
+            Data:true,
+            Result:DocumentToDelete
         })
     } catch (error) {
         res.json({
@@ -148,4 +203,12 @@ const DeleteFullQuestionnaire = async(req, res) =>{
 // }
 
 
-module.exports = { CreateQuestionnaire, GetAllQuestionnaires, DeleteFullQuestionnaire, GetQuestionnaireById, DummyExam }
+module.exports = { 
+    CreateQuestionnaire, 
+    GetAllQuestionnaires, 
+    DeleteFullQuestionnaire, 
+    GetQuestionnaireById, 
+    DummyExam, 
+    GetDummyExam,
+    DeleteById
+ }
