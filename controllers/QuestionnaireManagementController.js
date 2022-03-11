@@ -209,7 +209,7 @@ const DeleteFullQuestionnaire = async (req, res) => {
         )
         if (GetQuestionnaire !== null) {
             res.json({
-                Message: 'Warning! You cannot delete the ExamPlan because It already have Questions in it. SO pelese the Questions then You can Delete it',
+                Message: 'Warning! You cannot delete the ExamPlan because It already have Questions in it. So pelese Delete all Questions and then You can Delete the Exam Plan',
                 Data: true,
                 Result: true,
                 Status: 1
