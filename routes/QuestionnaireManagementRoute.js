@@ -13,12 +13,14 @@ const {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
-    GetQuestionnaireById
+    GetQuestionnaireById,
+    DummyExam
  } = require('../controllers/QuestionnaireManagementController');
 //End Block For Accessing The Controlers
 
 
 //Start Block For Joining Controllers to your Routes
+Router.post('/DummyExam',DummyExam);
 Router.post('/CreateQuestionnaire',CreateQuestionnaire);
 Router.get('/GetAllQuestionnaires',GetAllQuestionnaires);
 Router.delete('/DeleteFullQuestionnaire/:ExamId',DeleteFullQuestionnaire);

@@ -1,4 +1,31 @@
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
+const _DummyExamModel = require('../models/DummyExamModel');
+
+
+
+const DummyExam = async (req, res) => {
+    try {
+        const { ExamPlan, Price, TotalQuestions, Remarks } = req.body;
+        const DummyToSave = new _DummyExamModel({
+            ExamPlan:ExamPlan,
+            Price:Price,
+            TotalQuestions:TotalQuestions,
+            Remarks:Remarks
+        })
+        const SavedData = await DummyToSave.save();
+        res.json({
+            Message:'Question has Added to Exam Plan Successfuly',
+            Data:true,
+            Result:true
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
 
 const CreateQuestionnaire = async (req, res) => {
     try {
@@ -121,4 +148,4 @@ const DeleteFullQuestionnaire = async(req, res) =>{
 // }
 
 
-module.exports = { CreateQuestionnaire, GetAllQuestionnaires, DeleteFullQuestionnaire, GetQuestionnaireById }
+module.exports = { CreateQuestionnaire, GetAllQuestionnaires, DeleteFullQuestionnaire, GetQuestionnaireById, DummyExam }
