@@ -9,7 +9,7 @@ const SendEmailUsingNodeMailer = async (_Email,_Token) => {
       service: 'gmail',
       auth: {
         user: 'itismyworkspace@gmail.com', // generated ethereal user
-        pass: 'Re^m@n1!!', // generated ethereal password
+        pass: 'mitlndcbonnoffev', // generated ethereal password
       },
     });
     //Email Object

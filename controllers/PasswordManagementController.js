@@ -11,7 +11,6 @@ const ForgotPasswordMechanism = async (req, res) => {
     try {
         let _EmailResponse;
         const { Email } = req.body;
-        console.log(Email);
         const _FindUserRegisterEmail = await _UserManagementModel.findOne(
             { Email: Email }
         );
@@ -50,6 +49,7 @@ const ForgotPasswordMechanism = async (req, res) => {
             Email:_EmailResponse
         })
     } catch (error) {
+        console.log(error);
         res.json({
             Message: error.message,
             Data: false,
