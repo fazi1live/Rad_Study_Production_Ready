@@ -11,6 +11,7 @@ const ForgotPasswordMechanism = async (req, res) => {
     try {
         let _EmailResponse;
         const { Email } = req.body;
+        console.log(Email);
         const _FindUserRegisterEmail = await _UserManagementModel.findOne(
             { Email: Email }
         );
