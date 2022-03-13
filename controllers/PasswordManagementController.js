@@ -11,7 +11,7 @@ const ForgetPasswordRequest = async (req, res) => {
         )
         if(!_EmailToValidate){
             return res.json({
-                Message:'Email has Not Registered',
+                Message:`This Email ${Email} has Not Registered`,
                 Data:false,
                 Result:null
             })
