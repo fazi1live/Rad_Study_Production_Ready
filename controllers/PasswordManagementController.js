@@ -9,7 +9,7 @@ const ForgetPasswordRequest = async (req, res) => {
         const _EmailToValidate = await _UserManagementModel.findOne(
             {Email:Email}
         )
-        if(!Email){
+        if(!_EmailToValidate){
             return res.json({
                 Message:'Email has Not Registered',
                 Data:false,
