@@ -17,7 +17,7 @@ const ForgetPasswordRequest = async (req, res) => {
             })
         }
         res.json({
-            Message:`We have Sent and Email To ${Email}`,
+            Message:`We have Sent an Email To ${Email} With a Magic Link`,
             Data:true,
             EmailResponse:true,
             Result:true 
