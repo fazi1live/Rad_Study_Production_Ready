@@ -1,17 +1,33 @@
 const _UserManagementModel = require('../models/UserManagementModel');
 const _PasswordManagementModel = require('../models/PasswordManagementModel');
-const SECRET_KEY = 'super secret';
-const jwt = require('jsonwebtoken');
 const { SendEmailUsingNodeMailer } = require('../libraryfiles/SendEmailForPasswordReset');
-const crypto = require('crypto');
-const bcrypt = require('bcrypt');
-const SaltRounds = 10;
 
 const ForgetPasswordRequest = async (req, res) => {
+    //From Here User Will Send His Email after validation We Will Send Him Email with a Magic Link
     try {
-        
+        const { Email } = req.body;
+        const _EmailToValidate = await _UserManagementModel.findOne(
+            {Email:Email}
+        )
+        if(!Email){
+            return res.json({
+                Message:'Email has Not Registered',
+                Data:false,
+                Result:null
+            })
+        }
+        res.json({
+            Message:`We have Sent and Email To ${Email}`,
+            Data:true,
+            EmailResponse:true,
+            Result:true 
+        })
     } catch (error) {
-        
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:false
+        })
     }
 }
 
@@ -24,6 +40,7 @@ const ValidateUserForTokken = async (req, res) => {
 }
 
 const ForgetPasswordResponse = async (req, res) => {
+    //Once he Clicked the Magic Link from The Email He will send Token and New Password which will come here in this Api
     try {
        
     } catch (error) {

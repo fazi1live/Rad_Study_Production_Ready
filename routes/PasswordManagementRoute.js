@@ -13,9 +13,7 @@ const {
 
 //Joining Routes to Controllers Via Http
 Router.post('/ForgotPasswordMechanism',ForgetPasswordRequest);
-Router.get('/ForgotPasswordMechanism',ForgetPasswordRequest);
 Router.post('/ForgetPasswordResponse/:_Id/:_Tok',ForgetPasswordResponse);
-Router.get('/ForgetPasswordResponse/:_Id/:_Tok',ForgetPasswordResponse);
 Router.post('/ValidatePasswordToken',ValidateUserForTokken);
 //Joining Routes to Controllers Via Http
 
