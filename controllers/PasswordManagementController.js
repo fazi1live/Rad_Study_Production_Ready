@@ -1,25 +1,48 @@
 const _UserManagementModel = require('../models/UserManagementModel');
 const _PasswordManagementModel = require('../models/PasswordManagementModel');
 const { SendEmailUsingNodeMailer } = require('../libraryfiles/SendEmailForPasswordReset');
+const JWT_SECRET = 'SuperSecret';
+const jwt = require('jsonwebtoken');
+
 
 const ForgetPasswordRequest = async (req, res) => {
     //From Here User Will Send His Email after validation We Will Send Him Email with a Magic Link
     try {
         const { Email } = req.body;
+
+        //Make sure User Exist in Data Base
         const _EmailToValidate = await _UserManagementModel.findOne(
             {Email:Email}
         )
+        console.log(_EmailToValidate);
         if(!_EmailToValidate){
             return res.json({
                 Message:`This Email ${Email} has Not Registered`,
                 Data:false,
-                Result:null
+                Result:_EmailToValidate
             })
         }
+
+        //Make sure User Exist in Data Base
+        
+        //Create Magic Link That is One Time which is Valid for 15 Minutes
+
+        const Secret = JWT_SECRET + _EmailToValidate.Password; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
+        const PayLoad = {email:_EmailToValidate.Email, id:_EmailToValidate._id}
+        const Token = jwt.sign(PayLoad, Secret, {expiresIn:'15m'});
+        const ParamObject = {UserId:_EmailToValidate._id, Token:Token};
+        const Link = `http://localhost:3636/response-reset-password/${ParamObject}`;
+        //Create Magic Link That is One Time which is Valid for 15 Minutes
+
+        //Now Send The Magic Link To the Specified Email
+
+        const EmailResponse = await SendEmailUsingNodeMailer(Email, Link);
+
+        //Now Send The Magic Link To the Specified Email
         res.json({
             Message:`We have Sent an Email To ${Email} With a Magic Link`,
             Data:true,
-            EmailResponse:true,
+            EmailResponse:EmailResponse,
             Result:true 
         })
     } catch (error) {

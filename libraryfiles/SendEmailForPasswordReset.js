@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 
-const SendEmailUsingNodeMailer = async (_Email,_Token) => {
+const SendEmailUsingNodeMailer = async (_Email,_Link) => {
   try {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -19,8 +19,8 @@ const SendEmailUsingNodeMailer = async (_Email,_Token) => {
       to: _Email, // list of receivers
       subject: "Skillstitute", // Subject linea
       html: `<b>
-      <h1>${_Token}</h1>
-      <a href="/response-reset-password/${_Token}">Click Me</a>
+      <h1>${_Link}</h1>
+      <a href="${_Link}">Click Me</a>
   
       </b>`, // html body
     };
