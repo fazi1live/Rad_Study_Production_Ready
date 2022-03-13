@@ -31,7 +31,7 @@ const ForgetPasswordRequest = async (req, res) => {
         const PayLoad = {email:_EmailToValidate.Email, id:_EmailToValidate._id}
         const Token = jwt.sign(PayLoad, Secret, {expiresIn:'15m'});
         const ParamObject = {UserId:_EmailToValidate._id, Token:Token};
-        const Link = `http://rad-study.herokuapp.com/response-reset-password/${ParamObject}`;
+        const Link = `https://rad-study.herokuapp.com/response-reset-password/${ParamObject}`;
         //Create Magic Link That is One Time which is Valid for 15 Minutes
 
         //Now Send The Magic Link To the Specified Email
