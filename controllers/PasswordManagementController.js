@@ -70,8 +70,7 @@ const ValidateUserForTokken = async (req, res) => {
             return res.json({
                 Message:'Authentication Approved',
                 Data:true,
-                Result:true,
-                Id:_ValidateUser.id
+                Result:true
             })
         }
 
