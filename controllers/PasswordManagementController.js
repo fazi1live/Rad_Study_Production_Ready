@@ -1,8 +1,9 @@
 const _UserManagementModel = require('../models/UserManagementModel');
-const _PasswordManagementModel = require('../models/PasswordManagementModel');
 const { SendEmailUsingNodeMailer } = require('../libraryfiles/SendEmailForPasswordReset');
 const JWT_SECRET = 'SuperSecret';
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const SaltRounds = 10;
 
 
 const ForgetPasswordRequest = async (req, res) => {
@@ -29,7 +30,7 @@ const ForgetPasswordRequest = async (req, res) => {
 
         const Secret = JWT_SECRET + _EmailToValidate.Password; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
         const PayLoad = { email: _EmailToValidate.Email, id: _EmailToValidate._id }
-        const Token = jwt.sign(PayLoad, Secret, { expiresIn: '1m' });
+        const Token = jwt.sign(PayLoad, Secret, { expiresIn: '5m' });
         const Link = `https://rad-study.herokuapp.com/response-reset-password/${_EmailToValidate._id}/${Token}`;
         const CredentialsObject = { UserId: _EmailToValidate._id, Token: Token }
         //Create Magic Link That is One Time which is Valid for 15 Minutes
@@ -64,22 +65,22 @@ const ValidateUserForTokken = async (req, res) => {
             { _id: UserId }
         )
 
-        const _TemporarySecret = JWT_SECRET+_UserToValidate.Password;
-        const _ValidateUser = jwt.verify(Token,_TemporarySecret);
-        if( _UserToValidate && _ValidateUser ){
+        const _TemporarySecret = JWT_SECRET + _UserToValidate.Password;
+        const _ValidateUser = jwt.verify(Token, _TemporarySecret);
+        if (_UserToValidate && _ValidateUser) {
             return res.json({
-                Message:'Authentication Approved',
-                Data:true,
-                Result:true
+                Message: 'Authentication Approved',
+                Data: true,
+                Result: true
             })
         }
 
         //Check User Id and Token and Validate
 
         res.json({
-            Message:'Invalid Token',
-            Data:false,
-            Result:false
+            Message: 'Invalid Token',
+            Data: false,
+            Result: false
         })
     } catch (error) {
         res.json({
@@ -93,9 +94,39 @@ const ValidateUserForTokken = async (req, res) => {
 const ForgetPasswordResponse = async (req, res) => {
     //Once he Clicked the Magic Link from The Email He will send Token and New Password which will come here in this Api
     try {
+        const UserId = req.params._UserId;
+        const { Password, ConfirmPassword } = req.body;
+        const _UserToValidate = await _UserManagementModel.findOne(
+            { _id: UserId }
+        );
 
+        const _TemporarySecret = JWT_SECRET + _UserToValidate.Password;
+        const _ValidateUser = jwt.verify(Token, _TemporarySecret);
+
+        if (_UserToValidate && _ValidateUser && Password === ConfirmPassword) {
+            const NewPassword = await bcrypt.hash(Password, SaltRounds);
+            const _PasswordToUpdate = await _UserManagementModel.updateOne(
+                { _id: UserId },
+                { $set: { Password: NewPassword } }
+            )
+            res.json({
+                Message: 'Password Has Changed Successfuly',
+                Data: true,
+                Result: _PasswordToUpdate
+            })
+        } else {
+            res.json({
+                Message: 'Either Password Not Matched or Invalid Token or Link has Expired Please Try Again',
+                Data: false,
+                Result: false
+            })
+        }
     } catch (error) {
-
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: false
+        })
 
     }
 }

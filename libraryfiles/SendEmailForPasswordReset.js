@@ -24,7 +24,7 @@ const SendEmailUsingNodeMailer = async (_Email, _Link, _CredentialsObject) => {
       <br>
       <br>
       <br>
-      <h5>Note: This is One Time Link and will Expire in 1 minute You cannot Use it Once it Expired</h5>
+      <h5>Note: This is One Time Link and will Expire in 5 minute You cannot Use it Once it Expired</h5>
       <a href="${_Link}">Click Me</a>
   
       </b>`, // html body
