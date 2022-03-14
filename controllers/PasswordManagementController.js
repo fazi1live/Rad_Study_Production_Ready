@@ -64,7 +64,7 @@ const ValidateUserForTokken = async (req, res) => {
             { _id: UserId }
         )
 
-        const _TemporarySecret = JWT_SECRET+_UserToValidate.Password;
+        const _TemporarySecret = JWT_SECRET+'_UserToValidate.Password';
         const _ValidateUser = jwt.verify(Token,_TemporarySecret);
         
 
