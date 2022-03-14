@@ -95,6 +95,7 @@ const ForgetPasswordResponse = async (req, res) => {
     //Once he Clicked the Magic Link from The Email He will send Token and New Password which will come here in this Api
     try {
         const UserId = req.params._UserId;
+        const Token = req.params._Token;
         const { Password, ConfirmPassword } = req.body;
         const _UserToValidate = await _UserManagementModel.findOne(
             { _id: UserId }
