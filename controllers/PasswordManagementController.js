@@ -29,7 +29,7 @@ const ForgetPasswordRequest = async (req, res) => {
 
         const Secret = JWT_SECRET + _EmailToValidate.Password; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
         const PayLoad = { email: _EmailToValidate.Email, id: _EmailToValidate._id }
-        const Token = jwt.sign(PayLoad, Secret, { expiresIn: '30s' });
+        const Token = jwt.sign(PayLoad, Secret, { expiresIn: '1m' });
         const Link = `https://rad-study.herokuapp.com/response-reset-password/${_EmailToValidate._id}/${Token}`;
         const CredentialsObject = { UserId: _EmailToValidate._id, Token: Token }
         //Create Magic Link That is One Time which is Valid for 15 Minutes
@@ -64,7 +64,7 @@ const ValidateUserForTokken = async (req, res) => {
             { _id: UserId }
         )
 
-        const _TemporarySecret = JWT_SECRET+'_UserToValidate.Password';
+        const _TemporarySecret = JWT_SECRET+_UserToValidate.Password;
         const _ValidateUser = jwt.verify(Token,_TemporarySecret);
         
 
