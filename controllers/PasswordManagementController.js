@@ -66,13 +66,21 @@ const ValidateUserForTokken = async (req, res) => {
 
         const _TemporarySecret = JWT_SECRET+_UserToValidate.Password;
         const _ValidateUser = jwt.verify(Token,_TemporarySecret);
-        
+        if( _UserToValidate && _ValidateUser ){
+            return res.json({
+                Message:'Authentication Approved',
+                Data:true,
+                Result:true,
+                Id:_ValidateUser.id
+            })
+        }
 
         //Check User Id and Token and Validate
+
         res.json({
-            body: _UserToValidate,
-            Payload: _ValidateUser,
-            Token: Token
+            Message:'Invalid Token',
+            Data:false,
+            Result:false
         })
     } catch (error) {
         res.json({
