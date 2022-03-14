@@ -12,61 +12,83 @@ const ForgetPasswordRequest = async (req, res) => {
 
         //Make sure User Exist in Data Base
         const _EmailToValidate = await _UserManagementModel.findOne(
-            {Email:Email}
+            { Email: Email }
         )
         console.log(_EmailToValidate);
-        if(!_EmailToValidate){
+        if (!_EmailToValidate) {
             return res.json({
-                Message:`This Email ${Email} has Not Registered`,
-                Data:false,
-                Result:_EmailToValidate
+                Message: `This Email ${Email} has Not Registered`,
+                Data: false,
+                Result: _EmailToValidate
             })
         }
 
         //Make sure User Exist in Data Base
-        
+
         //Create Magic Link That is One Time which is Valid for 15 Minutes
 
         const Secret = JWT_SECRET + _EmailToValidate.Password; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
-        const PayLoad = {email:_EmailToValidate.Email, id:_EmailToValidate._id}
-        const Token = jwt.sign(PayLoad, Secret, {expiresIn:'15m'});
+        const PayLoad = { email: _EmailToValidate.Email, id: _EmailToValidate._id }
+        const Token = jwt.sign(PayLoad, Secret, { expiresIn: '1h' });
         const Link = `https://rad-study.herokuapp.com/response-reset-password/${_EmailToValidate._id}/${Token}`;
+        const CredentialsObject = { UserId: _EmailToValidate._id, Token: Token }
         //Create Magic Link That is One Time which is Valid for 15 Minutes
 
         //Now Send The Magic Link To the Specified Email
 
-        const EmailResponse = await SendEmailUsingNodeMailer(Email, Link);
+        const EmailResponse = await SendEmailUsingNodeMailer(Email, Link, CredentialsObject);
 
         //Now Send The Magic Link To the Specified Email
         res.json({
-            Message:`We have Sent an Email To ${Email} With a Magic Link`,
-            Data:true,
-            EmailResponse:EmailResponse,
-            Result:true 
+            Message: `We have Sent an Email To ${Email} With a Magic Link`,
+            Data: true,
+            EmailResponse: EmailResponse,
+            Result: true
         })
     } catch (error) {
         res.json({
-            Message:error.message,
-            Data:false,
-            Result:false
+            Message: error.message,
+            Data: false,
+            Result: false
         })
     }
 }
 
 const ValidateUserForTokken = async (req, res) => {
     try {
-       
-    } catch (error) {
+        const { UserId, Token } = req.body;
+
+        //Check User Id and Token and Validate
+
+        const _UserToValidate = await _UserManagementModel.findOne(
+            { _id: UserId }
+        )
+
+        const _TemporarySecret = JWT_SECRET+_UserToValidate.Password;
+        const _ValidateUser = jwt.verify(Token,_TemporarySecret);
         
+
+        //Check User Id and Token and Validate
+        res.json({
+            body: _UserToValidate,
+            Payload: _ValidateUser,
+            Token: Token
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: false
+        })
     }
 }
 
 const ForgetPasswordResponse = async (req, res) => {
     //Once he Clicked the Magic Link from The Email He will send Token and New Password which will come here in this Api
     try {
-       
+
     } catch (error) {
-       
+
 
     }
 }
