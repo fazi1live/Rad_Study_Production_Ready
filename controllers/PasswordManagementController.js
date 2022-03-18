@@ -13,12 +13,12 @@ const ForgetPasswordRequest = async (req, res) => {
 
         //Make sure User Exist in Data Base
         const _EmailToValidate = await _UserManagementModel.findOne(
-            { Email: Email }
-        )
-        console.log(_EmailToValidate);
+            { Email: Email },
+            {Email:1,SaltString:1} //Projection
+        ).lean();
         if (!_EmailToValidate) {
             return res.json({
-                Message: `This Email ${Email} has Not Registered`,
+                Message: `An Email Has Sent Sucessfuly to The Email`, //That emailnever exists and you can protect your app
                 Data: false,
                 Result: _EmailToValidate
             })
@@ -28,7 +28,7 @@ const ForgetPasswordRequest = async (req, res) => {
 
         //Create Magic Link That is One Time which is Valid for 15 Minutes
 
-        const Secret = JWT_SECRET + _EmailToValidate.Password; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
+        const Secret = JWT_SECRET + _EmailToValidate.SaltString; //NewSecret Will Be Unique for EveryUser as Passwor dis Unique
         const PayLoad = { email: _EmailToValidate.Email, id: _EmailToValidate._id }
         const Token = jwt.sign(PayLoad, Secret, { expiresIn: '5m' });
         const Link = `https://rad-study.herokuapp.com/response-reset-password/${_EmailToValidate._id}/${Token}`;
@@ -41,7 +41,7 @@ const ForgetPasswordRequest = async (req, res) => {
 
         //Now Send The Magic Link To the Specified Email
         res.json({
-            Message: `We have Sent an Email To ${Email} With a Magic Link`,
+            Message: `An Email Has Sent Sucessfuly to The Email`,
             Data: true,
             EmailResponse: EmailResponse,
             Result: true
@@ -62,10 +62,11 @@ const ValidateUserForTokken = async (req, res) => {
         //Check User Id and Token and Validate
 
         const _UserToValidate = await _UserManagementModel.findOne(
-            { _id: UserId }
+            { _id: UserId },
+            {Email:1,SaltString:1} //Projection
         )
 
-        const _TemporarySecret = JWT_SECRET + _UserToValidate.Password;
+        const _TemporarySecret = JWT_SECRET + _UserToValidate.SaltString;
         const _ValidateUser = jwt.verify(Token, _TemporarySecret);
         if (_UserToValidate && _ValidateUser) {
             return res.json({
@@ -98,17 +99,19 @@ const ForgetPasswordResponse = async (req, res) => {
         const Token = req.params._Token;
         const { Password, ConfirmPassword } = req.body;
         const _UserToValidate = await _UserManagementModel.findOne(
-            { _id: UserId }
+            { _id: UserId },
+            {Email:1,SaltString:1} //Projection
         );
 
         const _TemporarySecret = JWT_SECRET + _UserToValidate.Password;
         const _ValidateUser = jwt.verify(Token, _TemporarySecret);
 
         if (_UserToValidate && _ValidateUser && Password === ConfirmPassword) {
-            const NewPassword = await bcrypt.hash(Password, SaltRounds);
+            const Salt = await bcrypt.genSalt(SaltRounds);
+            const NewPassword = await bcrypt.hash(Password, Salt);
             const _PasswordToUpdate = await _UserManagementModel.updateOne(
                 { _id: UserId },
-                { $set: { Password: NewPassword } }
+                { Password: NewPassword, SaltString:Salt }
             )
             res.json({
                 Message: 'Password Has Changed Successfuly',
