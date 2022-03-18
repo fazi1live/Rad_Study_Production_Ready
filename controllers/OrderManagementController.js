@@ -71,7 +71,7 @@ const GetAllOrder = async (req, res) => {
         res.json({
             Message:'All Orders Found Successfuly',
             Data:true,
-            Result:GetAllOrder
+            Result:GetAllOrders
         })
     } catch (error) {
         res.json({
