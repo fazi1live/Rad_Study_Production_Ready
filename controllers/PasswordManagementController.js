@@ -103,7 +103,7 @@ const ForgetPasswordResponse = async (req, res) => {
             {Email:1,SaltString:1} //Projection
         );
 
-        const _TemporarySecret = JWT_SECRET + _UserToValidate.Password;
+        const _TemporarySecret = JWT_SECRET + _UserToValidate.SaltString;
         const _ValidateUser = jwt.verify(Token, _TemporarySecret);
 
         if (_UserToValidate && _ValidateUser && Password === ConfirmPassword) {

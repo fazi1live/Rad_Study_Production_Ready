@@ -65,8 +65,25 @@ const PlaceOrder = async (req, res) => {
     }
 }
 
+const GetAllOrder = async (req, res) => {
+    try {
+        const GetAllOrders = await _OrderModel.find().lean();
+        res.json({
+            Message:'All Orders Found Successfuly',
+            Data:true,
+            Result:GetAllOrder
+        })
+    } catch (error) {
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:null
+        })
+    }
+}
 module.exports = {
-    PlaceOrder
+    PlaceOrder,
+    GetAllOrder
 }
 
 
