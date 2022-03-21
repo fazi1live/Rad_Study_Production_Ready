@@ -60,15 +60,6 @@ const UserLogin = async(req, res) => {
 const UserRegister = async(req, res) => {
     try {
         const { Name, Email, Password, CourseName} = req.body;
-        console.log(req.body);
-        const _GetUserLength = _UserManagementModel.find();
-        if (_GetUserLength.length >= 1) {
-            res.json({
-                Message:`Admin Regesteration is Constraint`,
-                Status:null,
-                Data:false
-            })
-        } else {
             const CourseToSave = {CName:CourseName};
             const _RegisterAdmin = new _UserManagementModel({
                 Name:Name,
@@ -80,9 +71,9 @@ const UserRegister = async(req, res) => {
             res.json({
                 Message:`User Register Successfully`,
                 Data:true,
-                Result:_RegisterAdmin
+                Result:_RegisterAdmin,
+                UserLogin:UserLogin
             })
-        }
     } catch (error) {
         res.json({ Message: error.message, Result: null, Data: false });
     }
