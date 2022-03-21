@@ -10,7 +10,7 @@ const month = today.getMonth() + 1;
 const year = today.getFullYear();
 
 const UserRegisterSchema = mongoose.Schema({
-    Name: { type: String, required: true, unique:true},
+    Name: { type: String, required: true},
     Email: { type: String, required: true, unique:true},
     Password: { type: String, required: true },
     CourseName: { 
