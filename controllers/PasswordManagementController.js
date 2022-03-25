@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const SaltRounds = 10;
 
-
 const ForgetPasswordRequest = async (req, res) => {
     //From Here User Will Send His Email after validation We Will Send Him Email with a Magic Link
     try {
