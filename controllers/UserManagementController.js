@@ -1,8 +1,9 @@
-const _UserManagementModel =  require('../models/UserManagementModel');
+const _UserManagementModel = require('../models/UserManagementModel');
+const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const UserLogin = async(req, res) => {
+const UserLogin = async (req, res) => {
     try {
         const { Email, Password } = req.body;
         let _UserToAuthenticate = await _UserManagementModel.findOne({ Email: Email });
@@ -10,7 +11,7 @@ const UserLogin = async(req, res) => {
             return res.json({
                 Message: 'Authentication Failed Either Incorrect Password or Email',
                 Result: null,
-                Data:false
+                Data: false
             })
         }
 
@@ -19,7 +20,7 @@ const UserLogin = async(req, res) => {
             return res.json({
                 Message: 'Authentication Failed Either Incorrect Password or Email',
                 Result: null,
-                Data:false
+                Data: false
             })
         }
 
@@ -45,8 +46,8 @@ const UserLogin = async(req, res) => {
             Token: _Token,
             Result: _UserToAuthenticate
         })
-   
-        
+
+
 
     } catch (error) {
         res.json({
@@ -57,23 +58,25 @@ const UserLogin = async(req, res) => {
     }
 }
 
-const UserRegister = async(req, res) => {
+const UserRegister = async (req, res) => {
     try {
-        const { Name, Email, Password, CourseName} = req.body;
-            const CourseToSave = {CName:CourseName};
-            const _RegisterAdmin = new _UserManagementModel({
-                Name:Name,
-                Email:Email,
-                Password:Password,
-                CourseName:CourseToSave            
-            });
-            await _RegisterAdmin.save();
-            res.json({
-                Message:`User Register Successfully`,
-                Data:true,
-                Result:_RegisterAdmin,
-                UserLogin:UserLogin
-            })
+        const { Name, Email, Password, CourseName } = req.body;
+        const QuestionnaireToFind = await _QuestionnaireCluster.findOne({ ExamPlan: CourseName });
+        const QuestionnaireId = QuestionnaireToFind._id;
+        const CourseToSave = { CName: CourseName, CDetails: QuestionnaireId };
+        const _RegisterAdmin = new _UserManagementModel({
+            Name: Name,
+            Email: Email,
+            Password: Password,
+            CourseName: CourseToSave,
+        });
+        await _RegisterAdmin.save();
+        res.json({
+            Message: `User Register Successfully`,
+            Data: true,
+            Result: _RegisterAdmin,
+            UserLogin: UserLogin
+        })
     } catch (error) {
         res.json({ Message: error.message, Result: null, Data: false });
     }
@@ -83,9 +86,9 @@ const GetAllUser = async (req, res) => {
     try {
         const _GetAllUser = await _UserManagementModel.find().lean();
         res.json({
-            Message:'Found Successfuly',
-            Data:true,
-            Result:_GetAllUser
+            Message: 'Found Successfuly',
+            Data: true,
+            Result: _GetAllUser
         })
     } catch (error) {
         res.json({
@@ -100,13 +103,13 @@ DeleteUserById = async (req, res) => {
     try {
         const _UserId = req.params._UserId;
         const _UserToDelete = await _UserManagementModel.remove(
-            {_id:_UserId}
-            )
-            res.json({
-                Message:'User has Removed Successfuly',
-                Data:true,
-                Result:_UserToDelete
-            })
+            { _id: _UserId }
+        )
+        res.json({
+            Message: 'User has Removed Successfuly',
+            Data: true,
+            Result: _UserToDelete
+        })
     } catch (error) {
         res.json({
             Error: error.message,
@@ -120,13 +123,13 @@ ActiveUserStatusById = async (req, res) => {
     try {
         const _UserId = req.params._UserId;
         const _UserStatusToUpdate = await _UserManagementModel.updateOne(
-            {_id:_UserId},
-            {$set:{Status:1}}
+            { _id: _UserId },
+            { $set: { Status: 1 } }
         )
         res.json({
-            Message:"User Activated",
-            Data:true,
-            Result:_UserStatusToUpdate
+            Message: "User Activated",
+            Data: true,
+            Result: _UserStatusToUpdate
         })
     } catch (error) {
         res.json({
@@ -142,13 +145,13 @@ DeactivateUserStatusById = async (req, res) => {
         const _UserId = req.params._UserId;
         console.log(_UserId);
         const _UserStatusToUpdate = await _UserManagementModel.updateOne(
-            {_id:_UserId},
-            {$set:{Status:0}}
+            { _id: _UserId },
+            { $set: { Status: 0 } }
         )
         res.json({
-            Message:"User Deactivated",
-            Data:true,
-            Result:_UserStatusToUpdate
+            Message: "User Deactivated",
+            Data: true,
+            Result: _UserStatusToUpdate
         })
     } catch (error) {
         res.json({
@@ -163,12 +166,12 @@ GetUserInformationById = async (req, res) => {
     try {
         const _UserId = req.params._UserId;
         const _GetUserInformationById = await _UserManagementModel.findOne(
-            {_id:_UserId}
+            { _id: _UserId }
         )
         res.json({
-            Message:'User Found',
-            Data:true,
-            Result:_GetUserInformationById
+            Message: 'User Found',
+            Data: true,
+            Result: _GetUserInformationById
         })
     } catch (error) {
         res.json({
@@ -179,12 +182,35 @@ GetUserInformationById = async (req, res) => {
     }
 }
 
-module.exports= { 
-    UserLogin, 
-    UserRegister, 
+const GetUserWithQuestionnaireInformation = async (req, res) => {
+    try {
+        const { _UserId } = req.params;
+        const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
+            { _id: _UserId },
+            { _id:1, Name:1, Email:1, Status:1 , CreatedDate:1, CourseName:1} 
+            ).populate('CourseName.CDetails').lean();
+        res.json({
+            Message: 'Find Successfully',
+            Data: true,
+            Result: GetUserWithQuestionnaireInformationWithPopulation
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
+module.exports = {
+    UserLogin,
+    UserRegister,
     GetAllUser,
     DeleteUserById,
     ActiveUserStatusById,
     DeactivateUserStatusById,
-    GetUserInformationById
- }
+    GetUserInformationById,
+    GetUserWithQuestionnaireInformation
+}
