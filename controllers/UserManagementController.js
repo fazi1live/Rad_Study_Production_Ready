@@ -184,6 +184,7 @@ GetUserInformationById = async (req, res) => {
 
 const GetUserWithQuestionnaireInformation = async (req, res) => {
     try {
+        
         const { _UserId } = req.params;
         const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
             { _id: _UserId },
@@ -194,8 +195,12 @@ const GetUserWithQuestionnaireInformation = async (req, res) => {
             Data: true,
             Result: GetUserWithQuestionnaireInformationWithPopulation
         })
+        res.json({
+            Message: 'Find Successfully',
+            Data: true,
+            Result: GetUserWithQuestionnaireInformationWithPopulation
+        })
     } catch (error) {
-        console.log(error);
         res.json({
             Message: error.message,
             Data: false,
