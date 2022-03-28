@@ -1,7 +1,9 @@
 const _UserManagementModel = require('../models/UserManagementModel');
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
+const _UserQuestionnaireContainerCluster = require('../models/UserQuestionnaireContainerModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+
 
 const UserLogin = async (req, res) => {
     try {
@@ -70,7 +72,17 @@ const UserRegister = async (req, res) => {
             Password: Password,
             CourseName: CourseToSave,
         });
-        await _RegisterAdmin.save();
+        const SavedUser = await _RegisterAdmin.save();
+
+        const UserQuestionnaireContainerToSave = new _UserQuestionnaireContainerCluster({
+            UserId: SavedUser._id,
+            UserName: SavedUser.Name,
+            UserEmail: SavedUser.Email,
+            Questions: QuestionnaireToFind.Questions,
+            TotalQuestions: QuestionnaireToFind.Questions.length,
+            ExamPlan:SavedUser.CourseName[0].CName
+        })
+        await UserQuestionnaireContainerToSave.save();
         res.json({
             Message: `User Register Successfully`,
             Data: true,
@@ -182,19 +194,39 @@ GetUserInformationById = async (req, res) => {
     }
 }
 
+// const GetUserWithQuestionnaireInformation = async (req, res) => {
+//     try {
+
+//         const { _UserId } = req.params;
+//         const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
+//             { _id: _UserId },
+//             { _id: 1, Name: 1, Email: 1, Status: 1, CreatedDate: 1, CourseName: 1 }
+//         ).populate('CourseName.CDetails').lean();
+//         res.json({
+//             Message: 'Find Successfully',
+//             Data: true,
+//             Result: GetUserWithQuestionnaireInformationWithPopulation
+//         })
+//         res.json({
+//             Message: 'Find Successfully',
+//             Data: true,
+//             Result: GetUserWithQuestionnaireInformationWithPopulation
+//         })
+//     } catch (error) {
+// res.json({
+//     Message: error.message,
+//     Data: false,
+//     Result: null
+// })
+//     }
+// }
+
 const GetUserWithQuestionnaireInformation = async (req, res) => {
     try {
-        
         const { _UserId } = req.params;
-        const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
-            { _id: _UserId },
-            { _id:1, Name:1, Email:1, Status:1 , CreatedDate:1, CourseName:1} 
-            ).populate('CourseName.CDetails').lean();
-        res.json({
-            Message: 'Find Successfully',
-            Data: true,
-            Result: GetUserWithQuestionnaireInformationWithPopulation
-        })
+        const GetUserWithQuestionnaireInformationWithPopulation = await _UserQuestionnaireContainerCluster.findOne(
+            { UserId: _UserId },
+        )
         res.json({
             Message: 'Find Successfully',
             Data: true,
