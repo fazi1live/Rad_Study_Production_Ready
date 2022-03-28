@@ -6,7 +6,8 @@ const Router = express.Router();
 //Start Block Accessing The Library Files And Routes
 const { 
     UpdateUserQuestionnaireContainerByQuestions,
-    AddUserQuestionnaireResult
+    AddUserQuestionnaireResult,
+    GetFinalResult
  } = require('../controllers/UserQuestionnaireContainerController');
 //End Block Accessing The Library Files And Routes
 
@@ -14,6 +15,7 @@ const {
 //Start Block For Accessing The Controlers
 Router.post('/UpdateQuestions',UpdateUserQuestionnaireContainerByQuestions);
 Router.post('/AddUserQuestionnaireResult',AddUserQuestionnaireResult);
+Router.get('/GetFinalResult/:_UserId',GetFinalResult);
 //End Block For Accessing The Controlers
 
 

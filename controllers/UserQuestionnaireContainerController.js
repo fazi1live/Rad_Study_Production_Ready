@@ -58,7 +58,28 @@ const AddUserQuestionnaireResult = async (req, res) => {
     }
 }
 
+const GetFinalResult = async (req, res) => {
+ try {
+        const {_UserId} = req.params;
+        const DocumentToGet = await _UserQuestionnaireFinalResultCluster.findOne(
+         {UserId:_UserId}
+         )
+         res.json({
+             Message:'Data Found Successfuly',
+             Data:true,
+             Result:DocumentToGet
+         })
+ } catch (error) {
+    res.json({
+        Message: error.message,
+        Data: true,
+        Result: true
+    })
+ }
+}
+
 module.exports = {
     UpdateUserQuestionnaireContainerByQuestions,
-    AddUserQuestionnaireResult
+    AddUserQuestionnaireResult,
+    GetFinalResult
 }
