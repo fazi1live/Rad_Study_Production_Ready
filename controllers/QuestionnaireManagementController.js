@@ -1,5 +1,4 @@
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
-const _DummyExamModel = require('../models/DummyExamModel');
 const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionManagementModel');
 
 
@@ -142,10 +141,5 @@ module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
-    GetQuestionnaireById,
-    DummyExam,
-    GetDummyExam,
-    DeleteById,
-    EditDummyExamById,
-    GetEditDummyExamById
+    GetQuestionnaireById
 }
