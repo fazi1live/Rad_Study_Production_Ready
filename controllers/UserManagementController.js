@@ -4,11 +4,13 @@ const _UserQuestionnaireContainerCluster = require('../models/UserQuestionnaireC
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
 const UserLogin = async (req, res) => {
     try {
         const { Email, Password } = req.body;
-        let _UserToAuthenticate = await _UserManagementModel.findOne({ Email: Email });
+        let _UserToAuthenticate = await _UserManagementModel.findOne(
+            { Email: Email },
+            // {Email:1, Name:1, Password:1} 
+            ).lean();
         if (_UserToAuthenticate === null) {
             return res.json({
                 Message: 'Authentication Failed Either Incorrect Password or Email',
@@ -48,9 +50,6 @@ const UserLogin = async (req, res) => {
             Token: _Token,
             Result: _UserToAuthenticate
         })
-
-
-
     } catch (error) {
         res.json({
             Error: error.message,
@@ -70,7 +69,7 @@ const UserRegister = async (req, res) => {
             Name: Name,
             Email: Email,
             Password: Password,
-            CourseName: CourseToSave,
+            CourseName: CourseToSave
         });
         const SavedUser = await _RegisterAdmin.save();
 

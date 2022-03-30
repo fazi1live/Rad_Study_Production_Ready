@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const res = require('express/lib/response');
 const SaltRounds = 10;
 
 // Date
@@ -48,7 +47,9 @@ const UserRegisterSchema = mongoose.Schema({
 UserRegisterSchema.pre('save', async function (next) {
     try {
         const Salt = await bcrypt.genSalt(SaltRounds);
+        console.log(Salt);
         const HashedPassword = await bcrypt.hash(this.Password, Salt);
+        console.log(HashedPassword);
         this.Password = HashedPassword;
         this.SaltString = Salt;
         next();
@@ -62,3 +63,9 @@ UserRegisterSchema.pre('save', async function (next) {
 });
 
 module.exports = mongoose.model('UserRegisterCollection', UserRegisterSchema);
+
+
+
+
+
+
