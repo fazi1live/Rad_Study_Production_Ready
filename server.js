@@ -42,6 +42,7 @@ const _PasswordManagementRoute = require('./routes/PasswordManagementRoute');
 const _StripeManagementRoute = require('./routes/StripeManagementRoute');
 const _OrderManagementRoute = require('./routes/OrderManagementRoute');
 const _UserQuestionnaireContainerRoute = require('./routes/UserQuestionnaireContainerRoute');
+const _QuestionAnswerManagementRoute = require('./routes/QuestionAnswersManagementRoute');
 
 //*****UsingRoutes*****//
 app.use('/QuestionaireManagement',_QuestionaireManagementRoute);
@@ -52,6 +53,7 @@ app.use('/PasswordManagement',_PasswordManagementRoute)
 app.use('/StripeManagement',_StripeManagementRoute);
 app.use('/OrderManagement',_OrderManagementRoute);
 app.use('/UserQuestionnaireContainerManagement',_UserQuestionnaireContainerRoute);
+app.use('/QuestionAnswerManagement',_QuestionAnswerManagementRoute);
 app.use(express.static(path.join(__dirname,'/frontend-lms')));
 //*****UsingRoutes*****//
 
