@@ -82,8 +82,52 @@ const DeleteExamSubscriptionPlan = async (req, res) => {
     }
 }
 
+const GetExamSubscriptionbyPlanName = async (req, res) => {
+    try {
+        const  ExamPlan  = req.body;
+        const GetExamByName = await _ExamSubscriptionPlanModel.find(
+            {ExamPlan:ExamPlan},
+            {TotalQuestions:1}
+        )
+        res.json({
+            Message:'Data Found Successfuly',
+            Data:true,
+            Result:GetExamByName
+        })
+    } catch (error) {
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:null
+        })
+    }
+}
+
+const UpdateExamSubscriptionQuestionLimitByName = async (req, res) => {
+    try {
+        const  { ExamPlan,TotalQuestions }  = req.body;
+        const DocToUpdate = await _ExamSubscriptionPlanModel.updateOne(
+            {ExamPlan:ExamPlan},
+            {Status:1,TotalQuestions:TotalQuestions}
+            )
+            res.json({
+                Message:'Updated Successfuly',
+                Data:true,
+                Result:true
+            })
+    } catch (error) {
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:null
+        })
+    }
+}
+
 module.exports = { 
     CreateExamSubscriptionPlan, 
     GetAllExamSubscriptionPlan,
-    DeleteExamSubscriptionPlan
+    DeleteExamSubscriptionPlan,
+    GetExamSubscriptionbyPlanName,
+    UpdateExamSubscriptionQuestionLimitByName
  }

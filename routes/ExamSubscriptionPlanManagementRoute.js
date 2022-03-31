@@ -7,7 +7,9 @@ const Router = express.Router();
 const {
     CreateExamSubscriptionPlan,
     GetAllExamSubscriptionPlan,
-    DeleteExamSubscriptionPlan
+    DeleteExamSubscriptionPlan,
+    GetExamSubscriptionbyPlanName,
+    UpdateExamSubscriptionQuestionLimitByName
 } = require('../controllers/ExamSubscriptionPlanManagementController');
 //Calling Controllers
 
@@ -15,6 +17,8 @@ const {
 Router.post('/CreateExamSubscriptionPlan',CreateExamSubscriptionPlan);
 Router.get('/GetAllExamSubscriptionPlan',GetAllExamSubscriptionPlan);
 Router.delete('/DeleteExamSubscriptionPlan/:_UserId',DeleteExamSubscriptionPlan);
+Router.post('/UpdateExamSubscriptionQuestionLimitByName',UpdateExamSubscriptionQuestionLimitByName);
+Router.post('/GetExamSubscriptionbyPlanName',GetExamSubscriptionbyPlanName);
 //Joining Routes to Controllers Via Http
 
 module.exports = Router;
