@@ -5,6 +5,20 @@ const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionMana
 const CreateQuestionnaire = async (req, res) => {
     try {
         const { ExamPlan, Price, QuestionsArray } = req.body;
+        const GetTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan});
+        
+        if(GetTotalQuestions.TotalQuestions <= 0){
+            return res.json({
+                Message:"Question Limit has Exceeded",
+                Data:false,
+                Result:null
+            })
+        }
+
+        const UpdateQuestionLimitInExamSubscriptionPlan = await _ExamSubscriptionManagementModel.updateOne(
+            {ExamPlan:ExamPlan},
+            {$inc:{TotalQuestions:-QuestionsArray.length}}
+        )
         const _CheckExamPlanFromDataBase = await _QuestionnaireCluster.find({ ExamPlan: ExamPlan }).lean();
         if (_CheckExamPlanFromDataBase.length >= 1) {
             const _AddMoreQuestionsToExam = await _QuestionnaireCluster.updateOne(
@@ -28,7 +42,8 @@ const CreateQuestionnaire = async (req, res) => {
                 Message: `ExamPlan and Question Added Successfuly`,
                 Data: true,
                 Result: _AddExam,
-                Status: 2
+                Status: 2,
+                Questions:QuestionsArray
             })
         }
     } catch (error) {
