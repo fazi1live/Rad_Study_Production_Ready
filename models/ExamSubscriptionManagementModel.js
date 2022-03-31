@@ -10,6 +10,7 @@ const year = today.getFullYear();
 const ExamSubscriptionPlan = mongoose.Schema({
     ExamPlan: { type: String, required: true, unique:true },
     Price: { type: Number, required: true },
+    TotalQuestions: {type:Number, required: true },
     CreatedDate:{
         type:String,
         default:`${year}-${month}-${day}`,

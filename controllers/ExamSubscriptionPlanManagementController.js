@@ -2,7 +2,7 @@ const _ExamSubscriptionPlanModel = require('../models/ExamSubscriptionManagement
 
 const CreateExamSubscriptionPlan = async (req, res) => {
     try {
-        const {ExamPlan,Price} = req.body;
+        const {ExamPlan,Price,TotalQuestions} = req.body;
         const _FindTotalExams =  await _ExamSubscriptionPlanModel.find();
         const _FindAlreadyExistExamPlan = await _ExamSubscriptionPlanModel.findOne(
             {ExamPlan:ExamPlan}
@@ -25,7 +25,8 @@ const CreateExamSubscriptionPlan = async (req, res) => {
 
         const _CreateSubscription = new _ExamSubscriptionPlanModel({
             ExamPlan:ExamPlan,
-            Price:Price
+            Price:Price,
+            TotalQuestions:TotalQuestions
         });
         const _SaveDataTODatabase = await _CreateSubscription.save();
          res.json({
@@ -60,4 +61,29 @@ const GetAllExamSubscriptionPlan = async (req, res) => {
         })
     }
 }
-module.exports = { CreateExamSubscriptionPlan, GetAllExamSubscriptionPlan }
+
+const DeleteExamSubscriptionPlan = async (req, res) => {
+    try {
+        const {_UserId} = req.params;
+        const ExamToDelete = await _ExamSubscriptionPlanModel.deleteOne(
+            {_id:_UserId}
+        )
+        res.json({
+            Message:'User Deleted Successfuly',
+            Data:true,
+            Result:true
+        })
+    } catch (error) {
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:null
+        })
+    }
+}
+
+module.exports = { 
+    CreateExamSubscriptionPlan, 
+    GetAllExamSubscriptionPlan,
+    DeleteExamSubscriptionPlan
+ }

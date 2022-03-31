@@ -6,13 +6,15 @@ const Router = express.Router();
 //Calling Controllers
 const {
     CreateExamSubscriptionPlan,
-    GetAllExamSubscriptionPlan
+    GetAllExamSubscriptionPlan,
+    DeleteExamSubscriptionPlan
 } = require('../controllers/ExamSubscriptionPlanManagementController');
 //Calling Controllers
 
 //Joining Routes to Controllers Via Http
 Router.post('/CreateExamSubscriptionPlan',CreateExamSubscriptionPlan);
 Router.get('/GetAllExamSubscriptionPlan',GetAllExamSubscriptionPlan);
+Router.delete('/DeleteExamSubscriptionPlan/:_UserId',DeleteExamSubscriptionPlan);
 //Joining Routes to Controllers Via Http
 
 module.exports = Router;
