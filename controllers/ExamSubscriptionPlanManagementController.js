@@ -113,7 +113,7 @@ const UpdateExamSubscriptionQuestionLimitByName = async (req, res) => {
             res.json({
                 Message:'Updated Successfuly',
                 Data:true,
-                Result:true
+                Result:DocToUpdate
             })
     } catch (error) {
         res.json({
