@@ -93,6 +93,26 @@ const GetQuestionnaireById = async (req, res) => {
     }
 }
 
+const GetQuestionnaireByName = async (req, res) => {
+    try {
+        const { ExamPlan } = req.body;
+        const DocToGet = await _QuestionnaireCluster.findOne(
+            { ExamPlan:ExamPlan }
+        )
+        res.json({
+            Message:'Document Found Successfuly',
+            Data:true,
+            Result:DocToGet
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+} 
+
 const DeleteFullQuestionnaire = async (req, res) => {
     try {
         const Id = req.params._ExamId;
@@ -157,5 +177,6 @@ module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
-    GetQuestionnaireById
+    GetQuestionnaireById,
+    GetQuestionnaireByName
 }

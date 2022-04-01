@@ -15,7 +15,8 @@ const ExamSubscriptionPlan = mongoose.Schema({
     CreatedDate:{
         type:String,
         default:`${year}-${month}-${day}`,
-    }
+    },
+    QuestionnaireId: { type:mongoose.Types.ObjectId , ref:'QuestionnaireCollection' }
 },{timestamps:true});
 //End Block For Schema Creatiion
 

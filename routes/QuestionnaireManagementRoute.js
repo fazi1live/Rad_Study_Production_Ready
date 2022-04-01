@@ -13,7 +13,8 @@ const {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
-    GetQuestionnaireById
+    GetQuestionnaireById,
+    GetQuestionnaireByName
  } = require('../controllers/QuestionnaireManagementController');
 //End Block For Accessing The Controlers
 
@@ -23,6 +24,7 @@ Router.post('/CreateQuestionnaire',CreateQuestionnaire);
 Router.get('/GetAllQuestionnaires',GetAllQuestionnaires);
 Router.post('/DeleteFullQuestionnaire/:_ExamId',DeleteFullQuestionnaire);
 Router.get('/GetQuestionnaireById/:_QuestionnaireId',GetQuestionnaireById);
+Router.post('/GetQuestionnaireByName',GetQuestionnaireByName);
 //End Block For Joining Controllers to your Routes
 
 module.exports = Router;
