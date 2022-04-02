@@ -1,4 +1,5 @@
 const _ExamSubscriptionPlanModel = require('../models/ExamSubscriptionManagementModel');
+const _QuestionnaireManagementCluster = require('../models/QuestionnaireManagementModel');
 
 const CreateExamSubscriptionPlan = async (req, res) => {
     try {
@@ -65,11 +66,23 @@ const GetAllExamSubscriptionPlan = async (req, res) => {
 const DeleteExamSubscriptionPlan = async (req, res) => {
     try {
         const {_UserId} = req.params;
+        const ExamPlan = req.body;
+        const QuestionniareToFind = await _QuestionnaireManagementCluster.findOne(
+            {ExamPlan:ExamPlan}
+        )
+
+        if( QuestionniareToFind !== null ){
+            return res.json({
+                Message:'You cannot Delete the Exam Because It has Questions in it Go Delete The Questions first then Delete the ExamPlan',
+                Data:false,
+                Result:null
+            })
+        }
         const ExamToDelete = await _ExamSubscriptionPlanModel.deleteOne(
             {_id:_UserId}
         )
         res.json({
-            Message:'User Deleted Successfuly',
+            Message:'Exam Deleted Successfuly',
             Data:true,
             Result:true
         })

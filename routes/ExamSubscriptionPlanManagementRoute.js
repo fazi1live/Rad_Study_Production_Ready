@@ -16,7 +16,7 @@ const {
 //Joining Routes to Controllers Via Http
 Router.post('/CreateExamSubscriptionPlan',CreateExamSubscriptionPlan);
 Router.get('/GetAllExamSubscriptionPlan',GetAllExamSubscriptionPlan);
-Router.delete('/DeleteExamSubscriptionPlan/:_UserId',DeleteExamSubscriptionPlan);
+Router.post('/DeleteExamSubscriptionPlan/:_UserId',DeleteExamSubscriptionPlan);
 Router.post('/UpdateExamSubscriptionQuestionLimitByName',UpdateExamSubscriptionQuestionLimitByName);
 Router.post('/GetExamSubscriptionbyPlanName',GetExamSubscriptionbyPlanName);
 //Joining Routes to Controllers Via Http

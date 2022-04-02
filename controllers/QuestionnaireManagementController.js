@@ -100,7 +100,7 @@ const GetQuestionnaireById = async (req, res) => {
 
 const GetQuestionnaireByName = async (req, res) => {
     try {
-        const { ExamPlan } = req.body;
+        const ExamPlan = req.body;
         const DocToGet = await _QuestionnaireCluster.findOne(
             { ExamPlan:ExamPlan }
         )
