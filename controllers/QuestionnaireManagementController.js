@@ -120,27 +120,15 @@ const GetQuestionnaireByName = async (req, res) => {
 
 const DeleteFullQuestionnaire = async (req, res) => {
     try {
-        const Id = req.params._ExamId;
         const ExamPlan = req.body;
-        const GetQuestionnaire = await _DummyExamModel.findOne(
-            { ExamPlan: ExamPlan }
-        )
-        if (GetQuestionnaire !== null) {
-            res.json({
-                Message: 'Warning! You cannot delete the ExamPlan because It already have Questions in it. So pelese Delete all Questions and then You can Delete the Exam Plan',
-                Data: true,
-                Result: true,
-                Status: 1
-            })
-        } else {
-            const _DeleteExam = await _ExamSubscriptionManagementModel.remove({ _id: Id });
-            res.json({
-                Message: 'Exam Has Deleted Successfuly',
-                Data: true,
-                Result: _DeleteExam,
-                Status:2
-            })
-        }
+        const _DocToRemove = await _QuestionnaireCluster.deleteOne(
+            {ExamPlan:ExamPlan}
+        );
+        res.json({
+            Message:'Questionnaire Deleted Successfuly Now You Delete the Exam',
+            Data:true,
+            Result:true
+        })
     } catch (error) {
         res.json({
             Message: error.message,

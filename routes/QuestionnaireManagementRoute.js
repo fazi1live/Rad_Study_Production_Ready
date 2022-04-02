@@ -22,7 +22,7 @@ const {
 //Start Block For Joining Controllers to your Routes
 Router.post('/CreateQuestionnaire',CreateQuestionnaire);
 Router.get('/GetAllQuestionnaires',GetAllQuestionnaires);
-Router.post('/DeleteFullQuestionnaire/:_ExamId',DeleteFullQuestionnaire);
+Router.post('/DeleteFullQuestionnaire',DeleteFullQuestionnaire);
 Router.get('/GetQuestionnaireById/:_QuestionnaireId',GetQuestionnaireById);
 Router.post('/GetQuestionnaireByName',GetQuestionnaireByName);
 //End Block For Joining Controllers to your Routes
