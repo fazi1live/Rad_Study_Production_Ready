@@ -39,6 +39,11 @@ const CreateQuestionnaire = async (req, res) => {
                 Questions: QuestionsArray
             });
             const _AddExam = await _CreateExam.save();
+            const _AddIdToExamPlan = await _ExamSubscriptionManagementModel.updateOne(
+                {ExamPlan:ExamPlan},
+                {QuestionnaireId:_AddExam._id}
+            )
+            console.log(_AddIdToExamPlan);
             res.json({
                 Message: `ExamPlan and Question Added Successfuly`,
                 Data: true,
