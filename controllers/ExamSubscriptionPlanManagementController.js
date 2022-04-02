@@ -47,7 +47,7 @@ const CreateExamSubscriptionPlan = async (req, res) => {
 
 const GetAllExamSubscriptionPlan = async (req, res) => {
     try {
-        const _GetAllExamSubscriptionPlan = await _ExamSubscriptionPlanModel.find();
+        const _GetAllExamSubscriptionPlan = await _ExamSubscriptionPlanModel.find().populate('QuestionnaireId').lean();
         res.json({
             Message:'All Exams Found Successfuly',
             Data:true,
