@@ -5,7 +5,6 @@ const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionMana
 const CreateQuestionnaire = async (req, res) => {
     try {
         const { ExamPlan, Price, QuestionsArray } = req.body;
-        console.log(QuestionsArray);
         const _CheckExamPlanFromDataBase = await _QuestionnaireCluster.find({ ExamPlan: ExamPlan }).lean();
         const GetTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan}).lean();
 
