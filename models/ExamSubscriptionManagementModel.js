@@ -11,7 +11,8 @@ const ExamSubscriptionPlan = mongoose.Schema({
     ExamPlan: { type: String, required: true, unique:true },
     Price: { type: Number, required: true },
     TotalQuestions: {type:Number, required: true },
-    Status: { type:Number, default:1 }, 
+    Status: { type:Number, default:1 },
+    QuestionToAdd: { type:Number, default:0 }, 
     CreatedDate:{
         type:String,
         default:`${year}-${month}-${day}`,
