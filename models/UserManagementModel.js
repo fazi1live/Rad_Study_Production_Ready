@@ -47,9 +47,7 @@ const UserRegisterSchema = mongoose.Schema({
 UserRegisterSchema.pre('save', async function (next) {
     try {
         const Salt = await bcrypt.genSalt(SaltRounds);
-        console.log(Salt);
         const HashedPassword = await bcrypt.hash(this.Password, Salt);
-        console.log(HashedPassword);
         this.Password = HashedPassword;
         this.SaltString = Salt;
         next();

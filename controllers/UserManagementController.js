@@ -154,7 +154,6 @@ ActiveUserStatusById = async (req, res) => {
 DeactivateUserStatusById = async (req, res) => {
     try {
         const _UserId = req.params._UserId;
-        console.log(_UserId);
         const _UserStatusToUpdate = await _UserManagementModel.updateOne(
             { _id: _UserId },
             { $set: { Status: 0 } }

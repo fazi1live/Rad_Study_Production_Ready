@@ -5,7 +5,7 @@ const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionMana
 const CreateQuestionnaire = async (req, res) => {
     try {
         const { ExamPlan, Price, QuestionsArray } = req.body;
-      
+        console.log(QuestionsArray);
         const _CheckExamPlanFromDataBase = await _QuestionnaireCluster.find({ ExamPlan: ExamPlan }).lean();
         const GetTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan}).lean();
 
@@ -43,7 +43,6 @@ const CreateQuestionnaire = async (req, res) => {
                 {ExamPlan:ExamPlan},
                 {QuestionnaireId:_AddExam._id}
             )
-            console.log(_AddIdToExamPlan);
             res.json({
                 Message: `ExamPlan and Question Added Successfuly`,
                 Data: true,
