@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 
-//Date
-const today =  new Date();
+// Date
+const today = new Date();
 const day = today.getDate();
-const month = today.getMonth();
+const month = today.getMonth() + 1;
 const year = today.getFullYear();
+const time = today.getTime();
 
 //Start Block For Schema Creation
 const ExamSubscriptionPlan = mongoose.Schema({
@@ -13,9 +14,9 @@ const ExamSubscriptionPlan = mongoose.Schema({
     TotalQuestions: {type:Number, required: true },
     Status: { type:Number, default:1 },
     QuestionToAdd: { type:Number, default:0 }, 
-    CreatedDate:{
-        type:String,
-        default:`${year}-${month}-${day}`,
+    CreatedDate: {
+        type: String,
+        default: `${year}-${month}-${day}-${time}`,
     },
     QuestionnaireId: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionnaireCollection' }]
 },{timestamps:true});
