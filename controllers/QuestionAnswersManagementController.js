@@ -40,7 +40,27 @@ const GetAllQuestionsAnswers = async (req, res) => {
     }
 }
 
+const DeleteQuestionById = async (req, res) => {
+    try {
+        const { _UserId } = req.params;
+        const DocToDelete = await _QuestionAnswersManagementCluster.deleteOne(
+            {_id:_UserId}
+        )
+        res.json({
+            Message:'Question Deleted Successfuly',
+            Data:true,
+            Result:true
+        })
+    } catch (error) {
+        res.json({
+            Message:error.message,
+            Data:false,
+            Result:null
+        })
+    }
+}
 module.exports = {
     AddQuestionsForExams,
-    GetAllQuestionsAnswers
+    GetAllQuestionsAnswers,
+    DeleteQuestionById
 }

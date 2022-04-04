@@ -27,7 +27,8 @@ const CreateExamSubscriptionPlan = async (req, res) => {
         const _CreateSubscription = new _ExamSubscriptionPlanModel({
             ExamPlan:ExamPlan,
             Price:Price,
-            TotalQuestions:TotalQuestions
+            TotalQuestions:TotalQuestions,
+            QuestionToAdd:TotalQuestions
         });
         const _SaveDataTODatabase = await _CreateSubscription.save();
          res.json({
@@ -100,7 +101,7 @@ const GetExamSubscriptionbyPlanName = async (req, res) => {
         const  ExamPlan  = req.body;
         const GetExamByName = await _ExamSubscriptionPlanModel.find(
             {ExamPlan:ExamPlan},
-            {TotalQuestions:1}
+            {TotalQuestions:1, ExamPlan:1, QuestionToAdd:1}
         )
         res.json({
             Message:'Data Found Successfuly',
@@ -119,9 +120,22 @@ const GetExamSubscriptionbyPlanName = async (req, res) => {
 const UpdateExamSubscriptionQuestionLimitByName = async (req, res) => {
     try {
         const  { ExamPlan,TotalQuestions }  = req.body;
+        const GetQuestionnaireDoc = await _QuestionnaireManagementCluster.findOne(
+            {ExamPlan:ExamPlan}
+        )
+        if(GetQuestionnaireDoc !== null){
+            if(TotalQuestions <= GetQuestionnaireDoc.Questions.length){
+                return res.json({
+                    Message:`There are Already ${GetQuestionnaireDoc.Questions.length} in Your Questionnaire How can you Update you ExamPlan With a Value Less Than you Total Questions in Your ExamPlan`,
+                    Data:false,
+                    Result:null
+                })
+            }
+        }
+
         const DocToUpdate = await _ExamSubscriptionPlanModel.updateOne(
             {ExamPlan:ExamPlan},
-            {Status:1,TotalQuestions:TotalQuestions}
+            {Status:1,TotalQuestions:TotalQuestions,QuestionToAdd:TotalQuestions-GetQuestionnaireDoc.Questions.length}
             )
             res.json({
                 Message:'Updated Successfuly',
@@ -129,6 +143,7 @@ const UpdateExamSubscriptionQuestionLimitByName = async (req, res) => {
                 Result:DocToUpdate
             })
     } catch (error) {
+        console.log(error);
         res.json({
             Message:error.message,
             Data:false,

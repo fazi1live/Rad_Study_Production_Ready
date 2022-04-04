@@ -154,9 +154,10 @@ ActiveUserStatusById = async (req, res) => {
 DeactivateUserStatusById = async (req, res) => {
     try {
         const _UserId = req.params._UserId;
+        console.log(_UserId);
         const _UserStatusToUpdate = await _UserManagementModel.updateOne(
-            { _id: _UserId },
-            { $set: { Status: 0 } }
+            { Email: _UserId },
+            { $set: { Status: 1 } }
         )
         res.json({
             Message: "User Deactivated",
@@ -192,52 +193,47 @@ GetUserInformationById = async (req, res) => {
     }
 }
 
-// const GetUserWithQuestionnaireInformation = async (req, res) => {
-//     try {
-
-//         const { _UserId } = req.params;
-//         const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
-//             { _id: _UserId },
-//             { _id: 1, Name: 1, Email: 1, Status: 1, CreatedDate: 1, CourseName: 1 }
-//         ).populate('CourseName.CDetails').lean();
-//         res.json({
-//             Message: 'Find Successfully',
-//             Data: true,
-//             Result: GetUserWithQuestionnaireInformationWithPopulation
-//         })
-//         res.json({
-//             Message: 'Find Successfully',
-//             Data: true,
-//             Result: GetUserWithQuestionnaireInformationWithPopulation
-//         })
-//     } catch (error) {
-// res.json({
-//     Message: error.message,
-//     Data: false,
-//     Result: null
-// })
-//     }
-// }
-
 const GetUserWithQuestionnaireInformation = async (req, res) => {
     try {
+
         const { _UserId } = req.params;
-        const GetUserWithQuestionnaireInformationWithPopulation = await _UserQuestionnaireContainerCluster.findOne(
-            { UserId: _UserId },
-        )
+        const GetUserWithQuestionnaireInformationWithPopulation = await _UserManagementModel.findOne(
+            { _id: _UserId },
+            { _id: 1, Name: 1, Email: 1, Status: 1, CreatedDate: 1, CourseName: 1 }
+        ).populate('CourseName.CDetails').lean();
         res.json({
             Message: 'Find Successfully',
             Data: true,
             Result: GetUserWithQuestionnaireInformationWithPopulation
         })
     } catch (error) {
-        res.json({
-            Message: error.message,
-            Data: false,
-            Result: null
-        })
+res.json({
+    Message: error.message,
+    Data: false,
+    Result: null
+})
     }
 }
+
+// const GetUserWithQuestionnaireInformation = async (req, res) => {
+//     try {
+//         const { _UserId } = req.params;
+//         const GetUserWithQuestionnaireInformationWithPopulation = await _UserQuestionnaireContainerCluster.findOne(
+//             { UserId: _UserId },
+//         )
+//         res.json({
+//             Message: 'Find Successfully',
+//             Data: true,
+//             Result: GetUserWithQuestionnaireInformationWithPopulation
+//         })
+//     } catch (error) {
+//         res.json({
+//             Message: error.message,
+//             Data: false,
+//             Result: null
+//         })
+//     }
+// }
 
 module.exports = {
     UserLogin,

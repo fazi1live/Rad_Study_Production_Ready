@@ -8,7 +8,14 @@ const CreateQuestionnaire = async (req, res) => {
         const _CheckExamPlanFromDataBase = await _QuestionnaireCluster.find({ ExamPlan: ExamPlan }).lean();
         const GetTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan}).lean();
 
-        if(_CheckExamPlanFromDataBase.length !== 0 && _CheckExamPlanFromDataBase[0].Questions.length >= GetTotalQuestions.TotalQuestions){
+        if(GetTotalQuestions.Status === 1){
+            const UpdateExamStatus = await _ExamSubscriptionManagementModel.updateOne(
+                {ExamPlan:ExamPlan},
+                {$inc:{QuestionToAdd:-QuestionsArray.length}}
+                )
+        }
+
+        if(GetTotalQuestions.QuestionToAdd === 0){
                 const UpdateExamStatus = await _ExamSubscriptionManagementModel.updateOne(
                     {ExamPlan:ExamPlan},
                     {Status:0}
@@ -35,7 +42,8 @@ const CreateQuestionnaire = async (req, res) => {
             const _CreateExam = new _QuestionnaireCluster({
                 ExamPlan: ExamPlan,
                 Price: Price,
-                Questions: QuestionsArray
+                Questions: QuestionsArray,
+
             });
             const _AddExam = await _CreateExam.save();
             const _AddIdToExamPlan = await _ExamSubscriptionManagementModel.updateOne(

@@ -21,6 +21,7 @@ const QuestionnaireModel = mongoose.Schema({
             Key4: { type: String },
             AnswerKey: { type: String },
         }],required:true},
+    Status:{ type:Number, default:1 },
     CreatedDate: {
         type: String,
         default: `${year}-${month}-${day}`,
