@@ -43,11 +43,11 @@ const AddUserQuestionnaireResult = async (req, res) => {
             TotalQuestions: FinalResult.length,
             TotalCorrectQuestions: CorrectQuestions.length
         })
-        await DocToSave.save();
+        const Result = await DocToSave.save();
         res.json({
             Message: 'Final Result Saved Successfuly',
             Data: true,
-            Result: true
+            Result: Result
         })
     } catch (error) {
         res.json({
@@ -62,7 +62,7 @@ const GetFinalResult = async (req, res) => {
  try {
         const {_UserId} = req.params;
         const DocumentToGet = await _UserQuestionnaireFinalResultCluster.findOne(
-         {UserId:_UserId}
+         {_id:_UserId}
          )
          res.json({
              Message:'Data Found Successfuly',
