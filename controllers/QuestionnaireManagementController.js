@@ -15,7 +15,8 @@ const CreateQuestionnaire = async (req, res) => {
                 )
         }
 
-        if(GetTotalQuestions.QuestionToAdd === 0){
+        // const UpdatedTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan}).lean();
+        if(UpdatedTotalQuestions.QuestionToAdd === 0){
                 const UpdateExamStatus = await _ExamSubscriptionManagementModel.updateOne(
                     {ExamPlan:ExamPlan},
                     {Status:0}
