@@ -127,7 +127,27 @@ const GetQuestionnaireByName = async (req, res) => {
 
 const DeleteFullQuestionnaire = async (req, res) => {
     try {
+
+        // const Promise = [
+        //     _ExamSubscriptionManagementModel.updateOne(
+        //         { ExamPlan: ExamPlan },
+        //         { QuestionToAdd: GetExam.TotalQuestions }
+        //     ),
+        //     _QuestionnaireCluster.deleteOne(
+        //         { ExamPlan: ExamPlan }
+        //     )
+        // ]
+        // const ResolvePromise = await Promise.all(Promise);
+
+
         const ExamPlan = req.body;
+        const GetExam = await _ExamSubscriptionManagementModel.findOne(
+            {ExamPlan:ExamPlan}
+        )
+        const UpdateExam = await _ExamSubscriptionManagementModel.updateOne(
+            {ExamPlan:ExamPlan},
+            {QuestionToAdd:GetExam.TotalQuestions}
+        )
         const _DocToRemove = await _QuestionnaireCluster.deleteOne(
             {ExamPlan:ExamPlan}
         );
