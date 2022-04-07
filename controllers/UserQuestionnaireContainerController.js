@@ -61,6 +61,7 @@ const AddUserQuestionnaireResult = async (req, res) => {
 const GetFinalResult = async (req, res) => {
  try {
         const {_UserId} = req.params;
+        console.log(_UserId);
         const DocumentToGet = await _UserQuestionnaireFinalResultCluster.findOne(
          {_id:_UserId}
          )
