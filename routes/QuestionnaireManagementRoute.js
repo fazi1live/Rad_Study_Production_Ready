@@ -14,7 +14,8 @@ const {
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
     GetQuestionnaireById,
-    GetQuestionnaireByName
+    GetQuestionnaireByName,
+    AddSubCategory
  } = require('../controllers/QuestionnaireManagementController');
 //End Block For Accessing The Controlers
 
@@ -23,6 +24,7 @@ const {
 Router.post('/CreateQuestionnaire',CreateQuestionnaire);
 Router.get('/GetAllQuestionnaires',GetAllQuestionnaires);
 Router.post('/DeleteFullQuestionnaire',DeleteFullQuestionnaire);
+Router.post('/AddSubCategory',AddSubCategory);
 Router.get('/GetQuestionnaireById/:_QuestionnaireId',GetQuestionnaireById);
 Router.post('/GetQuestionnaireByName',GetQuestionnaireByName);
 //End Block For Joining Controllers to your Routes

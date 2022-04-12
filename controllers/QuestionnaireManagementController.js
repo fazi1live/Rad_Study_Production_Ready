@@ -1,5 +1,6 @@
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
 const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionManagementModel');
+const _SubCategoryModel = require('../models/SubCategoryModel');
 
 
 const CreateQuestionnaire = async (req, res) => {
@@ -192,11 +193,41 @@ const DeleteFullQuestionnaire = async (req, res) => {
 //     }
 // }
 
+const AddSubCategory = async(req, res) => {
+    try {
+        const { Category, SubCategory } = req.body;
+        console.log(Category, SubCategory);
+        const GetTheDoc = await _SubCategoryModel.findOne(
+            {Category:Category}
+        )
+
+        if( GetTheDoc !== null ){
+            console.log(GetTheDoc);
+        }
+
+        const DocToSave = new _SubCategoryModel({
+            SubCategory:SubCategory
+        })
+        await DocToSave.save();
+        res.json({
+            Message:'SubCategory Saved Successfuly',
+            Data:true,
+            Result:true
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
 
 module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
     GetQuestionnaireById,
-    GetQuestionnaireByName
+    GetQuestionnaireByName,
+    AddSubCategory
 }
