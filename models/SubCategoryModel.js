@@ -9,6 +9,7 @@ const time = today.getTime();
 
 //Start Block Schema Creating
 const SubCategorySchema = mongoose.Schema({
+    ExamPlan:{type:String},
     Category:{type:String},
     SubCategory:[{
         SC:{type:String}
