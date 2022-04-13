@@ -253,11 +253,29 @@ const AddSubCategory = async(req, res) => {
     }
 }
 
+const GetSubCategory = async(req, res) => {
+    try {
+        const GetAllSubCategory = await _SubCategoryModel.find();
+        res.json({
+            Message:'Data Found Successfuly',
+            Data:true,
+            Result:GetAllSubCategory
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
 module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
     DeleteFullQuestionnaire,
     GetQuestionnaireById,
     GetQuestionnaireByName,
-    AddSubCategory
+    AddSubCategory,
+    GetSubCategory
 }
