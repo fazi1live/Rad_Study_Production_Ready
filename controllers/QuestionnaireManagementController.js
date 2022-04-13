@@ -195,15 +195,19 @@ const DeleteFullQuestionnaire = async (req, res) => {
 
 const AddSubCategory = async(req, res) => {
     try {
-        const { Category, SubCategory } = req.body;
+        const { ExamPlan, Category, SubCategory } = req.body;
         SubCategoryObject = {SC:SubCategory}
+
+        const FindTheExamPLanAlreadyExixts = await _SubCategoryModel.findOne(
+            {ExamPlan:ExamPlan}
+        )
 
         const FindIfTopicAlreadyExists = await _SubCategoryModel.findOne(
             {Category:Category}
             )
 
         const FindIfSubCategoryAlreadyExists = await _SubCategoryModel.findOne(
-            {Category:Category,'SubCategory.SC':SubCategory}
+            {ExamPlan:ExamPlan,Category:Category,'SubCategory.SC':SubCategory}
         )
     
         if( FindIfSubCategoryAlreadyExists !== null ){
@@ -229,6 +233,7 @@ const AddSubCategory = async(req, res) => {
         }
 
         const DocToSave = new _SubCategoryModel({
+            ExamPlan:ExamPlan,
             Category:Category,
             SubCategory:SubCategoryObject
         })
