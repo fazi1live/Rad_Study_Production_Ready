@@ -241,7 +241,8 @@ const AddSubCategory = async(req, res) => {
         res.json({
             Message:'SubCategory Saved Successfuly',
             Data:true,
-            Result:SavedData
+            Result:SavedData,
+            Status:0
         })
     } catch (error) {
         res.json({
