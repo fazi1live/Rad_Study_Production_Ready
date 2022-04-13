@@ -209,7 +209,7 @@ const AddSubCategory = async(req, res) => {
         const FindIfSubCategoryAlreadyExists = await _SubCategoryModel.findOne(
             {ExamPlan:ExamPlan,Category:Category,'SubCategory.SC':SubCategory}
         )
-    
+
         if( FindIfSubCategoryAlreadyExists !== null ){
             return res.json({
                 Message:`${SubCategory} Already Exists for ${Category}`,
@@ -219,9 +219,9 @@ const AddSubCategory = async(req, res) => {
             })
         }
 
-        if(FindIfTopicAlreadyExists !== null){
+        if(FindIfTopicAlreadyExists !== null && FindTheExamPLanAlreadyExixts !== null){
             UpdateToDoc = await _SubCategoryModel.updateOne(
-                {Category:Category},
+                {ExamPlan:ExamPlan,Category:Category},
                 {$push:{SubCategory:SubCategoryObject}}
             )
             return res.json({
