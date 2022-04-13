@@ -196,23 +196,47 @@ const DeleteFullQuestionnaire = async (req, res) => {
 const AddSubCategory = async(req, res) => {
     try {
         const { Category, SubCategory } = req.body;
-        console.log(Category, SubCategory);
-        const GetTheDoc = await _SubCategoryModel.findOne(
-            {Category:Category}
-        )
+        SubCategoryObject = {SC:SubCategory}
 
-        if( GetTheDoc !== null ){
-            console.log(GetTheDoc);
+        const FindIfTopicAlreadyExists = await _SubCategoryModel.findOne(
+            {Category:Category}
+            )
+
+        const FindIfSubCategoryAlreadyExists = await _SubCategoryModel.findOne(
+            {Category:Category,'SubCategory.SC':SubCategory}
+        )
+    
+        if( FindIfSubCategoryAlreadyExists !== null ){
+            return res.json({
+                Message:`${SubCategory} Already Exists for ${Category}`,
+                Data:false,
+                Result:null,
+                Status:2
+            })
+        }
+
+        if(FindIfTopicAlreadyExists !== null){
+            UpdateToDoc = await _SubCategoryModel.updateOne(
+                {Category:Category},
+                {$push:{SubCategory:SubCategoryObject}}
+            )
+            return res.json({
+                Message:`${SubCategory} added into ${Category}`,
+                Data:true,
+                Result:true,
+                Status:1
+            })
         }
 
         const DocToSave = new _SubCategoryModel({
-            SubCategory:SubCategory
+            Category:Category,
+            SubCategory:SubCategoryObject
         })
-        await DocToSave.save();
+        const SavedData = await DocToSave.save();
         res.json({
             Message:'SubCategory Saved Successfuly',
             Data:true,
-            Result:true
+            Result:SavedData
         })
     } catch (error) {
         res.json({
