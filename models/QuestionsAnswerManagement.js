@@ -17,4 +17,4 @@ const QuestionAnswersManagementSchema = mongoose.Schema({
 })
 
 //Exporting The Schema
-module.exports = mongoose.model('QuestionAnswersManagementCollection', QuestionAnswersManagementSchema);
+module.exports = mongoose.model('QuestionAnswersManagementSchemaCollection', QuestionAnswersManagementSchema);

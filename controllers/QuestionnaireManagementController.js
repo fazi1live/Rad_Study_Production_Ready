@@ -298,6 +298,23 @@ const GetSubCategory = async(req, res) => {
     }
 }
 
+const GetALlMappedValues = async (req, res) => {
+    try {
+        const GetAllMappedValuesFromDb = await _MapSubCategoryAndTopicCollection.find();
+        res.json({
+            Message:'Found Successfuly',
+            Data:true,
+            Result:GetAllMappedValuesFromDb
+        })        
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
 module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
@@ -306,5 +323,6 @@ module.exports = {
     GetQuestionnaireByName,
     AddSubCategory,
     GetSubCategory,
-    MapSubCategoryAndTopic
+    MapSubCategoryAndTopic,
+    GetALlMappedValues
 }
