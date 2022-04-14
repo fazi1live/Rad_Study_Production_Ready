@@ -1,6 +1,7 @@
 const _QuestionnaireCluster = require('../models/QuestionnaireManagementModel');
 const _ExamSubscriptionManagementModel = require('../models/ExamSubscriptionManagementModel');
 const _SubCategoryModel = require('../models/SubCategoryModel');
+const _MapSubCategoryAndTopicCollection = require('../models/MapSubcategoryAndTopic');
 
 
 const CreateQuestionnaire = async (req, res) => {
@@ -195,45 +196,71 @@ const DeleteFullQuestionnaire = async (req, res) => {
 
 const AddSubCategory = async(req, res) => {
     try {
-        const { ExamPlan, Category, SubCategory } = req.body;
-        SubCategoryObject = {SC:SubCategory}
+        const { SubCategory } = req.body;
+        const CheckIfSubcategoryExist = await _SubCategoryModel.findOne(
+            {SubCategory:SubCategory}
+        ) 
+        
+        if(CheckIfSubcategoryExist !== null){
+            return res.json({
+                Message:'SubCategory Already Exists and You cannot Duplicate it',
+                Data:false,
+                Result:null
+            })
+        }
+       
+        const DocToSave = new _SubCategoryModel({
+            SubCategory:SubCategory
+        })
+        const SavedData = await DocToSave.save();
+        res.json({
+            Message:'SubCategory Saved Successfuly',
+            Data:true,
+            Result:SavedData,
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
 
-        const FindTheExamPLanAlreadyExixts = await _SubCategoryModel.findOne(
-            {ExamPlan:ExamPlan}
-        )
-
-        const FindIfTopicAlreadyExists = await _SubCategoryModel.findOne(
+const MapSubCategoryAndTopic = async(req, res) => {
+    try {
+        const { Category, SubCategory } = req.body;
+         SubCategoryObject = {SC:SubCategory}
+        const FindIfTopicAlreadyExists = await _MapSubCategoryAndTopicCollection.findOne(
             {Category:Category}
             )
 
-        const FindIfSubCategoryAlreadyExists = await _SubCategoryModel.findOne(
-            {ExamPlan:ExamPlan,Category:Category,'SubCategory.SC':SubCategory}
+        const FindIfSubCategoryAlreadyExists = await _MapSubCategoryAndTopicCollection.findOne(
+            {Category:Category,'SubCategory.SC':SubCategory}
         )
-
+            console.log(FindIfSubCategoryAlreadyExists);
         if( FindIfSubCategoryAlreadyExists !== null ){
             return res.json({
                 Message:`${SubCategory} Already Exists for ${Category}`,
                 Data:false,
                 Result:null,
-                Status:2
             })
         }
 
-        if(FindIfTopicAlreadyExists !== null && FindTheExamPLanAlreadyExixts !== null){
-            UpdateToDoc = await _SubCategoryModel.updateOne(
-                {ExamPlan:ExamPlan,Category:Category},
+        if(FindIfTopicAlreadyExists !== null){
+            UpdateToDoc = await _MapSubCategoryAndTopicCollection.updateOne(
+                {Category:Category},
                 {$push:{SubCategory:SubCategoryObject}}
             )
             return res.json({
                 Message:`${SubCategory} added into ${Category}`,
                 Data:true,
                 Result:true,
-                Status:1
+                Status:2
             })
         }
-
-        const DocToSave = new _SubCategoryModel({
-            ExamPlan:ExamPlan,
+        
+        const DocToSave = new _MapSubCategoryAndTopicCollection({
             Category:Category,
             SubCategory:SubCategoryObject
         })
@@ -242,9 +269,10 @@ const AddSubCategory = async(req, res) => {
             Message:'SubCategory Saved Successfuly',
             Data:true,
             Result:SavedData,
-            Status:0
+            Status:1
         })
     } catch (error) {
+        console.log(error.message);
         res.json({
             Message: error.message,
             Data: false,
@@ -277,5 +305,6 @@ module.exports = {
     GetQuestionnaireById,
     GetQuestionnaireByName,
     AddSubCategory,
-    GetSubCategory
+    GetSubCategory,
+    MapSubCategoryAndTopic
 }

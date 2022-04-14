@@ -8,13 +8,18 @@ const year = today.getFullYear();
 const time = today.getTime();
 
 //Start Block Schema Creating
-const QuestionAnswersManagementSchema = mongoose.Schema({
-    Questions:{},
+const MapSubCategoryAndTopicSchema = mongoose.Schema({
+    Category:{type:String},
+    SubCategory:[
+        {
+            SC:{type:String}
+        }
+    ],
     CreatedDate: {
         type: String,
         default: `${year}-${month}-${day}-${time}`,
     }
-})
+},{ timestamps: true })
 
 //Exporting The Schema
-module.exports = mongoose.model('QuestionAnswersManagementCollection', QuestionAnswersManagementSchema);
+module.exports = mongoose.model('MapSubCategoryAndTopicCollection', MapSubCategoryAndTopicSchema);

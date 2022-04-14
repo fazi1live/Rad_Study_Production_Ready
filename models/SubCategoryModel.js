@@ -9,16 +9,12 @@ const time = today.getTime();
 
 //Start Block Schema Creating
 const SubCategorySchema = mongoose.Schema({
-    ExamPlan:{type:String},
-    Category:{type:String},
-    SubCategory:[{
-        SC:{type:String}
-    }],
+    SubCategory:{type:String},
     CreatedDate: {
         type: String,
         default: `${year}-${month}-${day}-${time}`,
     }
-})
+},{ timestamps: true })
 
 //Exporting The Schema
 module.exports = mongoose.model('SubCategoryCollection', SubCategorySchema);
