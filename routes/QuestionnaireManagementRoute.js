@@ -18,7 +18,8 @@ const {
     AddSubCategory,
     GetSubCategory,
     MapSubCategoryAndTopic,
-    GetALlMappedValues
+    GetALlMappedValues,
+    DeleteCategoryByName
  } = require('../controllers/QuestionnaireManagementController');
 //End Block For Accessing The Controlers
 
@@ -33,6 +34,7 @@ Router.get('/GetQuestionnaireById/:_QuestionnaireId',GetQuestionnaireById);
 Router.post('/GetQuestionnaireByName',GetQuestionnaireByName);
 Router.post('/MapSubCategoryAndTopic',MapSubCategoryAndTopic);
 Router.get('/GetALlMappedValues',GetALlMappedValues);
+Router.post('/DeleteCategoryByName',DeleteCategoryByName);
 //End Block For Joining Controllers to your Routes
 
 module.exports = Router;

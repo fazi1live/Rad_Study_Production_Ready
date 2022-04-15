@@ -315,6 +315,37 @@ const GetALlMappedValues = async (req, res) => {
     }
 }
 
+const DeleteCategoryByName = async(req, res) => {
+    try {
+        const {SubCategory} = req.body;
+        const CheckIfSubCategoryMappedWithQuestionnaire = await _MapSubCategoryAndTopicCollection.find(
+            {SubCategory:SubCategory}
+        )
+        if(CheckIfSubCategoryMappedWithQuestionnaire.length !== 0){
+            return res.json({
+                Message:'You Cannot Delete SubCategory As It is Mapped With Topics Unpair It With Topic and Then Delete',
+                Data:false,
+                Result:null
+            })
+        }
+
+        const DocToDelete = await _SubCategoryModel.deleteOne(
+            {SubCategory:SubCategory}
+        )
+        res.json({
+            Message:'Deleted Successfuly',
+            Data:true,
+            Result:true
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: false,
+            Result: null
+        })
+    }
+}
+
 module.exports = {
     CreateQuestionnaire,
     GetAllQuestionnaires,
@@ -324,5 +355,6 @@ module.exports = {
     AddSubCategory,
     GetSubCategory,
     MapSubCategoryAndTopic,
-    GetALlMappedValues
+    GetALlMappedValues,
+    DeleteCategoryByName
 }
