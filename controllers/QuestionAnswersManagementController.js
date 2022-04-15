@@ -25,6 +25,7 @@ const AddQuestionsForExams = async (req, res) => {
 
 const GetAllQuestionsAnswers = async (req, res) => {
     try {
+        // console.log(a);
         const GetAllDocs = await _QuestionAnswersManagementCluster.find().lean();
         res.json({
             Message:'Data Found Successfuly',
