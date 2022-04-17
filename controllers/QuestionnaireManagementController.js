@@ -6,6 +6,7 @@ const _MapSubCategoryAndTopicCollection = require('../models/MapSubcategoryAndTo
 
 const CreateQuestionnaire = async (req, res) => {
     try {
+        let a = 10;
         const { ExamPlan, Price, QuestionsArray } = req.body;
         const _CheckExamPlanFromDataBase = await _QuestionnaireCluster.find({ ExamPlan: ExamPlan }).lean();
         const GetTotalQuestions = await _ExamSubscriptionManagementModel.findOne({ExamPlan:ExamPlan}).lean();
