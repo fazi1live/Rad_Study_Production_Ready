@@ -15,7 +15,7 @@ const {
 //Start Block For Accessing The Controlers
 Router.post('/UpdateQuestions',UpdateUserQuestionnaireContainerByQuestions);
 Router.post('/AddUserQuestionnaireResult',AddUserQuestionnaireResult);
-Router.get('/GetFinalResult/:_UserId',GetFinalResult);
+Router.post('/GetFinalResult',GetFinalResult);
 //End Block For Accessing The Controlers
 
 

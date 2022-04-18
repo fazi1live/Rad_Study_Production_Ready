@@ -1,5 +1,6 @@
 const _UserQuestionnaireContainerCluster = require('../models/UserQuestionnaireContainerModel');
 const _UserQuestionnaireFinalResultCluster = require('../models/UserQuestionnaireFinalResult');
+const ExamModel = require('../models/ExamSubscriptionManagementModel');
 
 const UpdateUserQuestionnaireContainerByQuestions = async (req, res) => {
     try {
@@ -25,24 +26,52 @@ const UpdateUserQuestionnaireContainerByQuestions = async (req, res) => {
 
 const AddUserQuestionnaireResult = async (req, res) => {
     try {
-        const { UserId, UserEmail, UserName, FinalResult } = req.body;
-        const ExamPlanToFind = await _UserQuestionnaireContainerCluster.findOne({UserId:UserId}).lean();
+        const { UserId, UserEmail, UserName, FinalResult, ExamPlan } = req.body;
+
+        const FindExamPlanDetails = await ExamModel.findOne(
+            {ExamPlan:ExamPlan}
+        )
+
         let CorrectQuestions = [];
         FinalResult.forEach(Objects => {
             if (Objects.UserAnswer === 'Correct') {
                 CorrectQuestions.push(Objects);
             }
         })
+
+        const FindIfUserAlreadyExists = await _UserQuestionnaireFinalResultCluster.findOne({
+            UserEmail: UserEmail
+        })
+
+        if (FindIfUserAlreadyExists !== null) {
+            const UserQuestionnaireFinalResultClusterToUpdate = await _UserQuestionnaireFinalResultCluster.updateOne(
+                { UserEmail: UserEmail },
+                {
+                    Questions: FinalResult,
+                    CorrectQuestions: CorrectQuestions,
+                    TotalQuestions: FinalResult.length,
+                    TotalCorrectQuestions: CorrectQuestions.length
+                }
+            )
+            return res.json({
+                Message: 'Result Updated',
+                Data: true,
+                Result: UserQuestionnaireFinalResultClusterToUpdate
+            })
+        }
+
         const DocToSave = new _UserQuestionnaireFinalResultCluster({
             UserId: UserId,
+            ExamPlanTotalQuestions:FindExamPlanDetails.TotalQuestions,
             UserName: UserName,
             UserEmail: UserEmail,
-            ExamPlan: ExamPlanToFind.ExamPlan,
+            ExamPlan: ExamPlan.PlanSelected,
             Questions: FinalResult,
             CorrectQuestions: CorrectQuestions,
             TotalQuestions: FinalResult.length,
             TotalCorrectQuestions: CorrectQuestions.length
         })
+
         const Result = await DocToSave.save();
         res.json({
             Message: 'Final Result Saved Successfuly',
@@ -59,24 +88,23 @@ const AddUserQuestionnaireResult = async (req, res) => {
 }
 
 const GetFinalResult = async (req, res) => {
- try {
-        const {_UserId} = req.params;
-        console.log(_UserId);
+    try {
+        const  UserEmail  = req.body;
         const DocumentToGet = await _UserQuestionnaireFinalResultCluster.findOne(
-         {_id:_UserId}
-         )
-         res.json({
-             Message:'Data Found Successfuly',
-             Data:true,
-             Result:DocumentToGet
-         })
- } catch (error) {
-    res.json({
-        Message: error.message,
-        Data: true,
-        Result: true
-    })
- }
+            { UserEmail: UserEmail }    
+        )
+        res.json({
+            Message: 'Data Found Successfuly',
+            Data: true,
+            Result: DocumentToGet
+        })
+    } catch (error) {
+        res.json({
+            Message: error.message,
+            Data: true,
+            Result: true
+        })
+    }
 }
 
 module.exports = {

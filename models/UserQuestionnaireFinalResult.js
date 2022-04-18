@@ -11,6 +11,7 @@ const time = today.getTime();
 //Start Block Schema Creating
 const UserQuestionnaireFinalResultSchema = mongoose.Schema({
     UserId:{type:String},
+    ExamPlanTotalQuestions:{type:String},
     UserName:{type:String},
     UserEmail:{type:String},
     ExamPlan:{type:String},
