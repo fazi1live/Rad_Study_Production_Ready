@@ -29,7 +29,7 @@ const AddUserQuestionnaireResult = async (req, res) => {
         const { UserId, UserEmail, UserName, FinalResult, ExamPlan } = req.body;
 
         const FindExamPlanDetails = await ExamModel.findOne(
-            {ExamPlan:ExamPlan}
+            {ExamPlan:ExamPlan.PlanSelected}
         )
 
         let CorrectQuestions = [];
