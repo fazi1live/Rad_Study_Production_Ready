@@ -21,7 +21,8 @@ const QuestionnaireModel = mongoose.Schema({
             Key4: { type: String },
             AnswerKey: { type: String },
             Topic: { type: String },
-            SubCategory: { type: String }
+            SubCategory: { type: String },
+            Difficulity: { type: String }
         }],required:true},
     Status:{ type:Number, default:1 },
     CreatedDate: {
