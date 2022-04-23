@@ -79,6 +79,7 @@ const AddUserQuestionnaireResult = async (req, res) => {
             Result: Result
         })
     } catch (error) {
+        console.log(error);
         res.json({
             Message: error.message,
             Data: true,
